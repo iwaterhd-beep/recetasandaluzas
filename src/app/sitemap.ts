@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { articulos } from "@/data/blog/articulos";
 import { CATEGORIAS, PROVINCIAS, SITE } from "@/lib/constants";
 import { getAllRecetas } from "@/lib/data";
 
@@ -38,14 +39,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.9,
   }));
 
-  // Artículos de blog (mismas slugs que en data/blog)
-  const blog: MetadataRoute.Sitemap = [
-    "mejores-tapas-sevilla",
-    "que-comer-semana-santa-andalucia",
-    "gazpacho-vs-salmorejo",
-  ].map((slug) => ({
-    url: `${base}/blog/${slug}`,
-    lastModified: now,
+  const blog: MetadataRoute.Sitemap = articulos.map((a) => ({
+    url: `${base}/blog/${a.slug}`,
+    lastModified: a.publicadaEn ? new Date(a.publicadaEn) : now,
     changeFrequency: "monthly" as const,
     priority: 0.7,
   }));

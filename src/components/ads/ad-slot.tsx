@@ -14,16 +14,33 @@ const HEIGHTS: Record<AdPosition, string> = {
   "in-article": "min-h-[250px]",
   sidebar: "min-h-[600px]",
   banner: "min-h-[90px]",
+  "cook-banner": "min-h-[90px]",
+  "cook-rail": "min-h-[180px]",
+};
+
+const LABELS: Record<AdPosition, string> = {
+  "in-article": "En artículo",
+  sidebar: "Lateral",
+  banner: "Banner",
+  "cook-banner": "Modo cocina · banner",
+  "cook-rail": "Modo cocina · lateral",
 };
 
 interface AdSlotProps {
   position: AdPosition;
   className?: string;
-  /** Forzar ocultar (p. ej. modo cocina) */
+  /** Forzar ocultar (p. ej. modo cocina global del sitio) */
   disabled?: boolean;
+  /** Slot propio del modo cocina (no se oculta con data-cook-mode) */
+  cookContext?: boolean;
 }
 
-export function AdSlot({ position, className = "", disabled = false }: AdSlotProps) {
+export function AdSlot({
+  position,
+  className = "",
+  disabled = false,
+  cookContext = false,
+}: AdSlotProps) {
   const pushed = useRef(false);
   const enabled = adsEnabled();
   const slotId = ADSENSE.slots[position];
@@ -43,7 +60,7 @@ export function AdSlot({ position, className = "", disabled = false }: AdSlotPro
 
   return (
     <aside
-      className={`ad-slot ad-slot--${position} ${HEIGHTS[position]} ${className}`}
+      className={`ad-slot ad-slot--${position} ${cookContext ? "cook-ad" : ""} ${HEIGHTS[position]} ${className}`}
       data-ad-slot={position}
       aria-label="Publicidad"
     >
@@ -60,18 +77,27 @@ export function AdSlot({ position, className = "", disabled = false }: AdSlotPro
         ) : (
           <ins
             className="adsbygoogle"
-            style={{ display: "block", minHeight: position === "sidebar" ? 600 : 90 }}
+            style={{
+              display: "block",
+              minHeight:
+                position === "sidebar" || position === "cook-rail" ? 250 : 90,
+            }}
             data-ad-client={ADSENSE.clientId}
             data-ad-slot={slotId}
-            data-ad-format={position === "banner" ? "horizontal" : "auto"}
+            data-ad-format={
+              position === "banner" || position === "cook-banner"
+                ? "horizontal"
+                : "auto"
+            }
             data-full-width-responsive="true"
           />
         )
       ) : (
         <div className="ad-slot__placeholder no-print">
-          <span>Espacio publicitario · {position}</span>
+          <span>Publicidad · {LABELS[position]}</span>
           <span className="ad-slot__hint">
-            Configura las variables NEXT_PUBLIC_ADSENSE_* cuando tengas la cuenta
+            AdSense — configura NEXT_PUBLIC_ADSENSE_SLOT_
+            {position.replace(/-/g, "_").toUpperCase()}
           </span>
         </div>
       )}

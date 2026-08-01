@@ -37,7 +37,7 @@ export const useAppStore = create<AppState>()(
     (set, get) => ({
       favoritos: [],
       listaCompra: [],
-      tema: "system",
+      tema: "light",
 
       toggleFavorito: (recetaId) =>
         set((state) => ({

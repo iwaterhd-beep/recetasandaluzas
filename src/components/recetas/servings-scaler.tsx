@@ -20,6 +20,7 @@ export function ServingsScaler({
   onRacionesChange,
 }: ServingsScalerProps) {
   const [raciones, setRaciones] = useState(racionesBase);
+  const [checked, setChecked] = useState<Record<string, boolean>>({});
 
   const set = (n: number) => {
     const next = Math.min(20, Math.max(1, n));
@@ -41,14 +42,22 @@ export function ServingsScaler({
     [ingredientes, racionesBase, raciones],
   );
 
+  const done = lineas.filter((l) => checked[l.id]).length;
+
   return (
-    <div>
+    <div className="app-card p-5 sm:p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-display text-2xl font-semibold">Ingredientes</h2>
-        <div className="flex items-center gap-2 rounded-md border border-border bg-surface-muted/60 p-1">
+        <div>
+          <h2 className="section-title mt-0 text-xl">Ingredientes</h2>
+          <p className="mt-0.5 text-sm text-muted-foreground">
+            {done > 0 ? `${done}/${lineas.length} listos · ` : ""}
+            Desde {racionesBase} raciones base
+          </p>
+        </div>
+        <div className="flex items-center gap-1 rounded-full border border-border bg-surface-muted/80 p-1">
           <button
             type="button"
-            className="btn btn-ghost size-10 min-h-0 p-0"
+            className="btn btn-ghost size-11 min-h-0 rounded-full p-0"
             onClick={() => set(raciones - 1)}
             aria-label="Menos raciones"
             disabled={raciones <= 1}
@@ -56,15 +65,15 @@ export function ServingsScaler({
             <Minus className="size-4" />
           </button>
           <span
-            className="min-w-[5.5rem] text-center text-sm font-semibold tabular-nums"
+            className="min-w-[4.5rem] text-center font-display text-lg font-semibold tabular-nums"
             aria-live="polite"
             aria-atomic="true"
           >
-            {raciones} ración{raciones === 1 ? "" : "es"}
+            {raciones}
           </span>
           <button
             type="button"
-            className="btn btn-ghost size-10 min-h-0 p-0"
+            className="btn btn-ghost size-11 min-h-0 rounded-full p-0"
             onClick={() => set(raciones + 1)}
             aria-label="Más raciones"
             disabled={raciones >= 20}
@@ -73,15 +82,25 @@ export function ServingsScaler({
           </button>
         </div>
       </div>
-      <p className="mt-1 text-sm text-muted-foreground">
-        Cantidades recalculadas desde {racionesBase} raciones base.
-      </p>
-      <ul className="mt-4 space-y-2">
-        {lineas.map((l) => (
-          <li key={l.id} className="border-b border-border py-2.5 text-sm">
-            {l.texto}
-          </li>
-        ))}
+
+      <ul className="mt-2">
+        {lineas.map((l) => {
+          const on = Boolean(checked[l.id]);
+          return (
+            <li key={l.id}>
+              <label className={`ing-check ${on ? "is-checked" : ""}`}>
+                <input
+                  type="checkbox"
+                  checked={on}
+                  onChange={() =>
+                    setChecked((prev) => ({ ...prev, [l.id]: !prev[l.id] }))
+                  }
+                />
+                <span>{l.texto}</span>
+              </label>
+            </li>
+          );
+        })}
       </ul>
     </div>
   );

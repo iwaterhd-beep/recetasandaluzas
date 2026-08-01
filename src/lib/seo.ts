@@ -60,6 +60,7 @@ export function buildPageMetadata(opts: {
     },
     twitter: {
       card: "summary_large_image",
+      site: SITE.twitter,
       title: opts.title,
       description: opts.description,
       images: [image],
@@ -69,20 +70,39 @@ export function buildPageMetadata(opts: {
 
 export function recipeMetadata(receta: Receta): Metadata {
   const total = tiempoTotal(receta);
-  const title = `${receta.nombre}: receta andaluza de ${receta.provincia}`;
-  const description =
-    receta.descripcion.length > 155
-      ? `${receta.descripcion.slice(0, 152)}…`
-      : receta.descripcion;
+
+  // Title ~55–60 caracteres
+  let title = `${receta.nombre} | Receta fácil paso a paso`;
+  if (title.length > 60) {
+    title = `${receta.nombre} | Receta andaluza`;
+  }
+  if (title.length > 60) {
+    const maxName = 60 - " | Receta".length;
+    title = `${clipText(receta.nombre, maxName)} | Receta`;
+  }
+
+  // Meta description ~150–155 con CTA
+  const suffix = ` ${total} min. ¡Hazla paso a paso!`;
+  const maxBase = Math.max(80, 155 - suffix.length);
+  const description = `${clipText(receta.descripcion, maxBase)}${suffix}`;
 
   return buildPageMetadata({
     title,
-    description: `${description} ${total} min · ${receta.dificultad} · ${receta.raciones} raciones.`,
+    description,
     path: `/recetas/${receta.id}`,
     image: receta.imagenes[0],
     type: "article",
     keywords: receta.etiquetasSEO,
   });
+}
+
+function clipText(text: string, max: number): string {
+  const t = text.replace(/\s+/g, " ").trim();
+  if (t.length <= max) return t;
+  const sliced = t.slice(0, Math.max(0, max - 1));
+  const lastSpace = sliced.lastIndexOf(" ");
+  const base = lastSpace > max * 0.6 ? sliced.slice(0, lastSpace) : sliced;
+  return `${base.trimEnd()}…`;
 }
 
 /** JSON-LD Schema.org Recipe para rich snippets */
@@ -108,7 +128,7 @@ export function recipeJsonLd(receta: Receta) {
     totalTime: minutesToIsoDuration(total),
     recipeYield: [`${receta.raciones} raciones`, String(receta.raciones)],
     recipeCategory: category,
-    recipeCuisine: "Andaluza",
+    recipeCuisine: ["Spanish", "Andalusian"],
     keywords: receta.etiquetasSEO.join(", "),
     aggregateRating: {
       "@type": "AggregateRating",
@@ -175,6 +195,22 @@ export function organizationJsonLd() {
     url: SITE.url,
     logo: absoluteUrl("/icons/icon-512.png"),
     description: SITE.description,
+  };
+}
+
+export function faqJsonLd(faqs: { pregunta: string; respuesta: string }[]) {
+  if (!faqs.length) return null;
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqs.map((f) => ({
+      "@type": "Question",
+      name: f.pregunta,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: f.respuesta,
+      },
+    })),
   };
 }
 

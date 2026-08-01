@@ -1,35 +1,42 @@
 import type { Metadata } from "next";
 import { AdSlot } from "@/components/ads/ad-slot";
-import { getAllSearchDocs } from "@/lib/data";
 import { RecipeSearch } from "@/components/recetas/recipe-search";
+import { getAllSearchDocs } from "@/lib/data";
 import { buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
-  title: "Buscador de recetas andaluzas",
+  title: "Recetas andaluzas",
   description:
-    "Busca recetas de cocina andaluza por nombre, ingrediente, provincia o dificultad. Gazpacho, tapas, guisos y postres.",
+    "Busca entre gazpachos, tapas, guisos, pescados y postres andaluces. Filtra por provincia, tiempo e ingredientes.",
   path: "/recetas",
-  keywords: ["buscar recetas andaluzas", "recetas por ingredientes", "cocina andaluza"],
+  keywords: ["buscar recetas andaluzas", "recetario andalucía", "tapas", "guisos"],
 });
 
-export default function RecetasPage() {
+interface Props {
+  searchParams: Promise<{ q?: string }>;
+}
+
+export default async function RecetasPage({ searchParams }: Props) {
+  const { q } = await searchParams;
   const docs = getAllSearchDocs();
 
   return (
-    <div className="container-app py-[var(--section-y)]">
-      <p className="section-label">Recetario</p>
-      <h1 className="section-title text-[length:var(--text-3xl)]">Todas las recetas</h1>
-      <p className="section-lead">
-        Busca por nombre o ingrediente, filtra por provincia y tiempo, o dime qué tienes en la
-        nevera.
-      </p>
+    <div className="bg-background">
+      <div className="container-app app-screen">
+        <header>
+          <h1 className="app-screen__title">Explorar</h1>
+          <p className="app-screen__lead">
+            Busca por nombre o ingrediente.
+          </p>
+        </header>
 
-      <div className="no-print mt-6">
-        <AdSlot position="banner" />
-      </div>
+        <div className="no-print mt-5">
+          <AdSlot position="banner" />
+        </div>
 
-      <div className="mt-8">
-        <RecipeSearch docs={docs} />
+        <div className="mt-5 md:mt-8">
+          <RecipeSearch docs={docs} initialQuery={q?.trim() ?? ""} />
+        </div>
       </div>
     </div>
   );

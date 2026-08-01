@@ -17,22 +17,21 @@ export function RecipeInteractive({ receta }: RecipeInteractiveProps) {
 
   return (
     <>
-      <div className="mt-8 flex flex-col gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <RecipeActions receta={receta} raciones={raciones} />
+      </div>
+
+      <div className="sticky-cook-cta no-print">
         <Link
           href={`/recetas/${receta.id}/cocinar`}
-          className="btn btn-primary w-full sm:w-auto"
+          className="btn btn-primary"
         >
-          <ChefHat className="size-4" />
+          <ChefHat className="size-5" />
           Empezar a cocinar
         </Link>
       </div>
 
-      <div className="no-print my-10">
-        <AdSlot position="in-article" />
-      </div>
-
-      <section className="mt-4">
+      <section className="mt-8">
         <ServingsScaler
           racionesBase={receta.raciones}
           ingredientes={receta.ingredientes}
@@ -40,9 +39,13 @@ export function RecipeInteractive({ receta }: RecipeInteractiveProps) {
         />
       </section>
 
+      <div className="no-print my-8">
+        <AdSlot position="in-article" />
+      </div>
+
       {receta.informacionNutricional && (
-        <section className="mt-10 rounded-lg border border-border bg-surface-muted/40 p-5">
-          <h2 className="font-display text-xl font-semibold">
+        <section className="app-card mt-2 p-5">
+          <h2 className="section-title mt-0 text-xl">
             Información nutricional
           </h2>
           <p className="mt-1 text-sm text-muted-foreground">

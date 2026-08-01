@@ -6,12 +6,13 @@ const CookMode = dynamic(
   () => import("@/components/cocina/cook-mode").then((m) => m.CookMode),
   {
     loading: () => (
-      <div
-        className="flex min-h-dvh items-center justify-center bg-background"
-        role="status"
-        aria-live="polite"
-      >
-        <p className="text-muted-foreground">Preparando modo cocina…</p>
+      <div className="cook-shell cook-loading" role="status" aria-live="polite">
+        <div className="cook-loading__inner">
+          <span className="cook-loading__ring" aria-hidden />
+          <p className="cook-loading__eyebrow">Modo cocina</p>
+          <p className="cook-loading__title">Preparando tu mesa de trabajo…</p>
+          <p className="cook-loading__hint">Pantalla grande, temporizador y pasos claros</p>
+        </div>
       </div>
     ),
   },

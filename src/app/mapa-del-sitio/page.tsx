@@ -1,6 +1,14 @@
+import type { Metadata } from "next";
 import { CATEGORIAS, PROVINCIAS, SITE } from "@/lib/constants";
 import { getAllRecetas } from "@/lib/data";
 import { articulos } from "@/data/blog/articulos";
+import { buildPageMetadata } from "@/lib/seo";
+
+export const metadata: Metadata = buildPageMetadata({
+  title: "Mapa del sitio",
+  description: `Índice de todas las páginas de ${SITE.name}: recetas, categorías, provincias y blog de cocina andaluza.`,
+  path: "/mapa-del-sitio",
+});
 
 /**
  * Sitemap HTML accesible (complementa sitemap.xml).

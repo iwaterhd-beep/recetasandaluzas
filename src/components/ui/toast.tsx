@@ -22,7 +22,7 @@ export function Toast({ show, message }: ToastProps) {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={reduce ? undefined : { opacity: 0, y: 8 }}
           transition={{ type: "spring", stiffness: 400, damping: 28 }}
-          className="pointer-events-none fixed bottom-6 left-1/2 z-[120] flex -translate-x-1/2 items-center gap-2 rounded-md bg-azul-ceramica-deep px-4 py-3 text-sm font-medium text-white shadow-[var(--shadow-lift)]"
+          className="pointer-events-none fixed bottom-6 left-1/2 z-[120] flex -translate-x-1/2 items-center gap-2 rounded-full bg-neutral-900 px-4 py-3 text-sm font-medium text-white shadow-[var(--shadow-lift)]"
         >
           <Check className="size-4 shrink-0 text-aceite" aria-hidden />
           {message}

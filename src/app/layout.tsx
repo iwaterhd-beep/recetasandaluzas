@@ -1,7 +1,8 @@
 import type { Metadata, Viewport } from "next";
-import { Fraunces, Source_Sans_3 } from "next/font/google";
+import { DM_Sans, Newsreader } from "next/font/google";
 import { SkipLink } from "@/components/a11y/skip-link";
 import { AdSenseScript } from "@/components/ads/adsense-script";
+import { BottomNav } from "@/components/layout/bottom-nav";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
 import { Providers } from "@/components/providers/providers";
@@ -9,16 +10,16 @@ import { RegisterSW } from "@/components/pwa/register-sw";
 import { SITE } from "@/lib/constants";
 import "./globals.css";
 
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+const newsreader = Newsreader({
+  variable: "--font-newsreader",
   subsets: ["latin"],
   display: "swap",
   preload: true,
   adjustFontFallback: true,
 });
 
-const sourceSans = Source_Sans_3({
-  variable: "--font-source-sans",
+const dmSans = DM_Sans({
+  variable: "--font-dm-sans",
   subsets: ["latin"],
   display: "swap",
   preload: true,
@@ -96,12 +97,13 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "#1e5f7a" },
-    { media: "(prefers-color-scheme: dark)", color: "#0f171a" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#111111" },
   ],
   width: "device-width",
   initialScale: 1,
   maximumScale: 5,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({
@@ -112,13 +114,13 @@ export default function RootLayout({
   return (
     <html
       lang="es"
-      className={`${fraunces.variable} ${sourceSans.variable} h-full antialiased`}
+      className={`${newsreader.variable} ${dmSans.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="flex min-h-full flex-col bg-background text-foreground">
+      <body className="app-shell flex min-h-full flex-col bg-background text-foreground">
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{var s=localStorage.getItem("recetas-andaluzas-storage");var t=s?JSON.parse(s).state?.tema||"system":"system";var d=t==="dark"||(t==="system"&&window.matchMedia("(prefers-color-scheme: dark)").matches);document.documentElement.classList.toggle("dark",d)}catch(e){}})()`,
+            __html: `(function(){try{var s=localStorage.getItem("recetas-andaluzas-storage");var t=s?JSON.parse(s).state?.tema||"light":"light";var d=t==="dark";document.documentElement.classList.toggle("dark",d)}catch(e){}})()`,
           }}
         />
         <SkipLink />
@@ -130,6 +132,7 @@ export default function RootLayout({
             {children}
           </main>
           <Footer />
+          <BottomNav />
         </Providers>
       </body>
     </html>

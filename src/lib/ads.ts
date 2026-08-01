@@ -5,6 +5,9 @@ export const ADSENSE = {
     "in-article": process.env.NEXT_PUBLIC_ADSENSE_SLOT_IN_ARTICLE ?? "",
     sidebar: process.env.NEXT_PUBLIC_ADSENSE_SLOT_SIDEBAR ?? "",
     banner: process.env.NEXT_PUBLIC_ADSENSE_SLOT_BANNER ?? "",
+    "cook-banner": process.env.NEXT_PUBLIC_ADSENSE_SLOT_COOK_BANNER ?? "",
+    /** Lateral modo cocina — mantener altura moderada (sin scroll) */
+    "cook-rail": process.env.NEXT_PUBLIC_ADSENSE_SLOT_COOK_RAIL ?? "",
   },
 } as const;
 

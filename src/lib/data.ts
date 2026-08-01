@@ -2,29 +2,46 @@ import type { Receta } from "@/types/receta";
 import { toResumen } from "@/lib/recetas";
 import type { Categoria, Provincia } from "@/types/receta";
 import { recetasIndex } from "@/data/recetas";
+import { getFaqForReceta } from "@/data/recetas/faqs";
+import { expandPasos } from "@/lib/expand-pasos";
 import { toSearchDoc, type RecetaSearchDoc } from "@/lib/search";
 
+function withFaqAndExpandedPasos(receta: Receta): Receta {
+  const withFaq = receta.faq?.length
+    ? receta
+    : { ...receta, faq: getFaqForReceta(receta) };
+  return {
+    ...withFaq,
+    pasos: expandPasos(withFaq.pasos),
+  };
+}
+
 export function getAllRecetas(): Receta[] {
-  return recetasIndex;
+  return recetasIndex.map(withFaqAndExpandedPasos);
 }
 
 export function getRecetaById(id: string): Receta | undefined {
-  return recetasIndex.find((r) => r.id === id);
+  const found = recetasIndex.find((r) => r.id === id);
+  return found ? withFaqAndExpandedPasos(found) : undefined;
 }
 
 export function getRecetasByProvincia(provincia: Provincia): Receta[] {
-  return recetasIndex.filter((r) => r.provincia === provincia);
+  return recetasIndex
+    .filter((r) => r.provincia === provincia)
+    .map(withFaqAndExpandedPasos);
 }
 
 export function getRecetasByCategoria(categoria: Categoria): Receta[] {
-  return recetasIndex.filter((r) => r.categoria === categoria);
+  return recetasIndex
+    .filter((r) => r.categoria === categoria)
+    .map(withFaqAndExpandedPasos);
 }
 
 export function getAllRecetaIds(): string[] {
   return recetasIndex.map((r) => r.id);
 }
 
-export function getRecetasRelacionadas(receta: Receta, limite = 4): Receta[] {
+export function getRecetasRelacionadas(receta: Receta, limite = 5): Receta[] {
   const mismoIngredienteIds = new Set(
     receta.ingredientes.slice(0, 3).map((i) => i.nombre.toLowerCase()),
   );
@@ -43,7 +60,7 @@ export function getRecetasRelacionadas(receta: Receta, limite = 4): Receta[] {
     .filter((x) => x.score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, limite)
-    .map((x) => x.r);
+    .map((x) => withFaqAndExpandedPasos(x.r));
 }
 
 export function getAllResumenes() {

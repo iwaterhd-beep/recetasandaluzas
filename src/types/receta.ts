@@ -56,6 +56,12 @@ export interface InformacionNutricional {
   carbohidratos: number;
 }
 
+/** Pregunta frecuente (People Also Ask / FAQPage schema) */
+export interface FaqItem {
+  pregunta: string;
+  respuesta: string;
+}
+
 export interface Receta {
   id: string;
   nombre: string;
@@ -79,6 +85,8 @@ export interface Receta {
   maridaje?: string;
   /** Variantes del plato */
   variantes?: string;
+  /** FAQ para rich results y sección on-page */
+  faq?: FaqItem[];
   /** Fecha ISO para ordenar por "más recientes" */
   publicadaEn?: string;
 }

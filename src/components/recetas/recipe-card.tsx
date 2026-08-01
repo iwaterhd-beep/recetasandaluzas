@@ -1,10 +1,9 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { Clock, Heart } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
-import { Stars } from "@/components/recetas/stars";
+import { RecipeImage } from "@/components/recetas/recipe-image";
 import { categoriaLabel } from "@/lib/constants";
 import { springSnappy } from "@/lib/motion";
 import { useAppStore } from "@/stores/app-store";
@@ -13,9 +12,10 @@ import type { RecetaResumen } from "@/types/receta";
 interface RecipeCardProps {
   receta: RecetaResumen;
   index?: number;
+  badge?: string;
 }
 
-export function RecipeCard({ receta, index = 0 }: RecipeCardProps) {
+export function RecipeCard({ receta, index = 0, badge }: RecipeCardProps) {
   const favoritos = useAppStore((s) => s.favoritos);
   const toggleFavorito = useAppStore((s) => s.toggleFavorito);
   const esFav = favoritos.includes(receta.id);
@@ -23,67 +23,63 @@ export function RecipeCard({ receta, index = 0 }: RecipeCardProps) {
 
   return (
     <motion.article
-      initial={reduce ? false : { opacity: 0, y: 14 }}
+      initial={reduce ? false : { opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.35, delay: reduce ? 0 : Math.min(index * 0.045, 0.36) }}
-      whileHover={reduce ? undefined : { y: -3 }}
-      className="group relative flex flex-col overflow-hidden rounded-lg border border-border bg-surface shadow-transparent transition-shadow hover:shadow-[var(--shadow-soft)]"
+      transition={{
+        duration: 0.28,
+        delay: reduce ? 0 : Math.min(index * 0.035, 0.28),
+      }}
+      className="group h-full"
     >
-      <Link
-        href={`/recetas/${receta.id}`}
-        className="relative block aspect-[4/3] overflow-hidden bg-surface-muted"
-      >
-        <Image
-          src={receta.imagen}
-          alt={`${receta.nombre} — receta andaluza de ${receta.provincia}`}
-          fill
-          className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-        />
-        <span className="absolute bottom-2 left-2 rounded-sm bg-azul-ceramica-deep/85 px-2 py-0.5 text-[0.65rem] font-semibold tracking-wide text-white uppercase">
-          {receta.provincia}
-        </span>
-      </Link>
-
-      <div className="flex flex-1 flex-col p-4">
-        <div className="flex items-start justify-between gap-2">
-          <div>
-            <p className="text-xs text-muted-foreground">{categoriaLabel(receta.categoria)}</p>
-            <Link href={`/recetas/${receta.id}`}>
-              <h3 className="font-display text-lg font-semibold leading-snug text-azul-ceramica-deep transition-colors group-hover:text-primary dark:text-azul-claro">
-                {receta.nombre}
-              </h3>
-            </Link>
-          </div>
+      <Link href={`/recetas/${receta.id}`} className="recipe-card-tm">
+        <div className="recipe-card-tm__media">
+          <RecipeImage
+            src={receta.imagen}
+            alt={`${receta.nombre} — receta andaluza de ${receta.provincia}`}
+            fill
+            className="object-cover transition-transform duration-500 ease-out group-hover:scale-[1.04]"
+            sizes="(max-width: 768px) 50vw, (max-width: 1280px) 33vw, 25vw"
+          />
           <motion.button
             type="button"
-            onClick={() => toggleFavorito(receta.id)}
-            className="btn btn-ghost size-9 min-h-0 shrink-0 p-0"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              toggleFavorito(receta.id);
+            }}
+            className="absolute right-2 top-2 grid size-11 place-items-center rounded-full bg-white text-foreground shadow-[var(--shadow-soft)]"
             aria-label={esFav ? "Quitar de favoritos" : "Añadir a favoritos"}
             aria-pressed={esFav}
-            whileTap={reduce ? undefined : { scale: 0.85 }}
-            animate={esFav && !reduce ? { scale: [1, 1.25, 1] } : { scale: 1 }}
+            whileTap={reduce ? undefined : { scale: 0.88 }}
+            animate={esFav && !reduce ? { scale: [1, 1.15, 1] } : { scale: 1 }}
             transition={springSnappy}
           >
             <Heart
-              className={`size-4 transition-colors duration-200 ${
-                esFav ? "fill-accent text-accent" : ""
-              }`}
+              className={`size-4 ${esFav ? "fill-tomate text-tomate" : "text-muted-foreground"}`}
             />
           </motion.button>
+          {badge && (
+            <span className="absolute left-2 top-2 rounded-full bg-white/95 px-2.5 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-foreground shadow-sm">
+              {badge}
+            </span>
+          )}
         </div>
-
-        <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{receta.descripcion}</p>
-
-        <div className="mt-auto flex items-center justify-between gap-2 pt-3 text-xs text-muted-foreground">
-          <span className="inline-flex items-center gap-1">
-            <Clock className="size-3.5" aria-hidden />
-            {receta.tiempoTotal} min
-          </span>
-          <span className="capitalize">{receta.dificultad}</span>
-          <Stars value={receta.valoracion} />
+        <div className="recipe-card-tm__body">
+          <h3 className="recipe-card-tm__title">{receta.nombre}</h3>
+          <p className="recipe-card-tm__meta">
+            <span className="inline-flex items-center gap-1">
+              <Clock className="size-3.5 text-muted-foreground" aria-hidden />
+              {receta.tiempoTotal} min
+            </span>
+            <span aria-hidden>·</span>
+            <span className="capitalize">{receta.dificultad}</span>
+            <span aria-hidden>·</span>
+            <span>
+              {badge ? receta.provincia : categoriaLabel(receta.categoria)}
+            </span>
+          </p>
         </div>
-      </div>
+      </Link>
     </motion.article>
   );
 }

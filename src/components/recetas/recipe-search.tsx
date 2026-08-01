@@ -23,14 +23,16 @@ interface RecipeSearchProps {
   docs: RecetaSearchDoc[];
   initialCategoria?: string;
   initialProvincia?: string;
+  initialQuery?: string;
 }
 
 export function RecipeSearch({
   docs,
   initialCategoria,
   initialProvincia,
+  initialQuery = "",
 }: RecipeSearchProps) {
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState(initialQuery);
   const [provincia, setProvincia] = useState(initialProvincia ?? "");
   const [categoria, setCategoria] = useState(initialCategoria ?? "");
   const [dificultad, setDificultad] = useState("");
@@ -129,7 +131,7 @@ export function RecipeSearch({
           onFocus={() => setShowSuggest(true)}
           onBlur={() => setTimeout(() => setShowSuggest(false), 150)}
           placeholder="Busca por nombre, ingrediente, provincia…"
-          className="w-full rounded-lg border border-border-strong bg-surface py-3.5 pr-12 pl-11 text-base shadow-[var(--shadow-soft)] outline-none focus:border-primary focus:ring-2 focus:ring-ring/30"
+          className="w-full rounded-full border border-border-strong bg-surface py-3.5 pr-12 pl-11 text-base shadow-[var(--shadow-soft)] outline-none focus:border-primary focus:ring-2 focus:ring-ring/30"
           autoComplete="off"
         />
         {query && (
@@ -169,6 +171,36 @@ export function RecipeSearch({
         )}
       </div>
 
+      {/* Chips categoría one-tap (Explore) */}
+      {!initialCategoria && (
+        <ul className="mt-4 flex gap-2 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          <li className="shrink-0">
+            <button
+              type="button"
+              className={`meta-chip min-h-9 px-3.5 ${!categoria ? "meta-chip--accent" : ""}`}
+              onClick={() => setCategoria("")}
+            >
+              Todas
+            </button>
+          </li>
+          {CATEGORIAS.map((c) => (
+            <li key={c.slug} className="shrink-0">
+              <button
+                type="button"
+                className={`meta-chip min-h-9 px-3.5 ${
+                  categoria === c.slug ? "meta-chip--accent" : ""
+                }`}
+                onClick={() =>
+                  setCategoria((prev) => (prev === c.slug ? "" : c.slug))
+                }
+              >
+                {c.nombre}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+
       <div className="mt-4 flex flex-wrap items-center gap-2">
         <button
           type="button"
@@ -187,7 +219,7 @@ export function RecipeSearch({
           id="orden"
           value={orden}
           onChange={(e) => setOrden(e.target.value as OrdenBusqueda)}
-          className="rounded-md border border-border bg-surface px-3 py-2 text-sm"
+          className="rounded-full border border-border bg-surface px-3 py-2 text-sm"
         >
           <option value="relevancia">Relevancia</option>
           <option value="valoracion">Valoración</option>
@@ -201,7 +233,7 @@ export function RecipeSearch({
       </div>
 
       {showFilters && (
-        <div className="mt-4 grid gap-4 rounded-lg border border-border bg-surface p-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="app-card mt-4 grid gap-4 p-4 sm:grid-cols-2 lg:grid-cols-3">
           <Field label="Provincia">
             <select
               value={provincia}
@@ -343,7 +375,7 @@ export function RecipeSearch({
         </p>
       ) : (
         <ul
-          className={`mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3 ${isPending ? "opacity-70" : ""} transition-opacity duration-200`}
+          className={`explore-grid mt-8 ${isPending ? "opacity-70" : ""} transition-opacity duration-200`}
         >
           {resultados.map((r, i) => (
             <li key={r.id}>

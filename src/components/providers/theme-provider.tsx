@@ -1,16 +1,26 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useAppStore } from "@/stores/app-store";
 
+/**
+ * UI Thermomix blanca: light por defecto.
+ * Solo aplica `.dark` si el usuario elige explícitamente dark.
+ */
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const tema = useAppStore((s) => s.tema);
+  const setTema = useAppStore((s) => s.setTema);
+  const migrated = useRef(false);
 
   useEffect(() => {
-    const root = document.documentElement;
-    const preferDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const dark = tema === "dark" || (tema === "system" && preferDark);
-    root.classList.toggle("dark", dark);
+    if (migrated.current) return;
+    migrated.current = true;
+    // Evita el chrome verde antiguo (system → OS dark)
+    if (tema === "system") setTema("light");
+  }, [tema, setTema]);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", tema === "dark");
   }, [tema]);
 
   return <>{children}</>;

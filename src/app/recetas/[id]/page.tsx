@@ -1,10 +1,15 @@
-import Image from "next/image";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { Clock, Users, ChefHat } from "lucide-react";
 import { AdSlot } from "@/components/ads/ad-slot";
+import { RecipeFaq } from "@/components/recetas/recipe-faq";
+import { RecipeImage } from "@/components/recetas/recipe-image";
 import { RecipeInteractive } from "@/components/recetas/recipe-interactive";
+import { RecipeSocial } from "@/components/recetas/recipe-social";
 import { Stars } from "@/components/recetas/stars";
+import { RecipeCard } from "@/components/recetas/recipe-card";
+
 import { JsonLd } from "@/components/seo/json-ld";
 import { categoriaLabel, provinciaSlug } from "@/lib/constants";
 import {
@@ -12,9 +17,10 @@ import {
   getRecetaById,
   getRecetasRelacionadas,
 } from "@/lib/data";
-import { tiempoTotal } from "@/lib/recetas";
+import { tiempoTotal, toResumen } from "@/lib/recetas";
 import {
   breadcrumbJsonLd,
+  faqJsonLd,
   recipeJsonLd,
   recipeMetadata,
 } from "@/lib/seo";
@@ -39,10 +45,11 @@ export default async function RecetaPage({ params }: Props) {
   const receta = getRecetaById(id);
   if (!receta) notFound();
 
-  const relacionadas = getRecetasRelacionadas(receta, 4);
+  const relacionadas = getRecetasRelacionadas(receta, 5);
   const total = tiempoTotal(receta);
   const imagen = receta.imagenes[0] ?? "/images/placeholder-receta.svg";
   const altImagen = `${receta.nombre} de ${receta.provincia}, cocina andaluza casera`;
+  const faqLd = faqJsonLd(receta.faq ?? []);
 
   return (
     <article>
@@ -58,10 +65,14 @@ export default async function RecetaPage({ params }: Props) {
             },
             { name: receta.nombre, path: `/recetas/${receta.id}` },
           ]),
+          ...(faqLd ? [faqLd] : []),
         ]}
       />
 
-      <nav aria-label="Migas de pan" className="container-app pt-6 text-xs text-muted-foreground">
+      <nav
+        aria-label="Migas de pan"
+        className="container-app pt-4 text-xs text-muted-foreground"
+      >
         <ol className="flex flex-wrap items-center gap-1">
           <li>
             <Link href="/" className="hover:text-primary">
@@ -70,7 +81,10 @@ export default async function RecetaPage({ params }: Props) {
           </li>
           <li aria-hidden>/</li>
           <li>
-            <Link href={`/categoria/${receta.categoria}`} className="hover:text-primary">
+            <Link
+              href={`/categoria/${receta.categoria}`}
+              className="hover:text-primary"
+            >
               {categoriaLabel(receta.categoria)}
             </Link>
           </li>
@@ -88,142 +102,156 @@ export default async function RecetaPage({ params }: Props) {
         </ol>
       </nav>
 
-      <div className="relative isolate overflow-hidden border-b border-border">
-        <div className="azulejo absolute inset-0 opacity-40" aria-hidden />
-        <div
-          className="absolute inset-0 bg-gradient-to-b from-azul-ceramica-deep/90 to-background"
-          aria-hidden
-        />
-        <div className="container-app relative grid gap-8 py-12 md:grid-cols-[1.1fr_0.9fr] md:items-end md:py-16">
-          <div>
-            <p className="section-label text-azul-mist">
-              {receta.provincia} · {categoriaLabel(receta.categoria)}
-            </p>
-            <h1 className="mt-2 font-display text-[length:var(--text-3xl)] font-semibold text-white">
-              {receta.nombre}
-            </h1>
-            <p className="mt-3 max-w-xl text-base leading-relaxed text-azul-mist">
-              {receta.descripcion}
-            </p>
-            <dl className="mt-6 flex flex-wrap gap-x-5 gap-y-2 text-sm text-white/85">
-              <div>
-                <dt className="inline opacity-70">Tiempo · </dt>
-                <dd className="inline font-medium">{total} min</dd>
-              </div>
-              <div>
-                <dt className="inline opacity-70">Dificultad · </dt>
-                <dd className="inline font-medium capitalize">{receta.dificultad}</dd>
-              </div>
-              <div className="inline-flex items-center gap-2">
-                <Stars value={receta.valoracion} className="[&_span]:text-aceite" />
-                <span className="text-white/70">({receta.numValoraciones})</span>
-              </div>
-            </dl>
-          </div>
-
-          <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-white/15 shadow-[var(--shadow-lift)]">
-            <Image
-              src={imagen}
-              alt={altImagen}
-              fill
-              className="object-cover"
-              priority
-              sizes="(max-width: 768px) 100vw, 40vw"
-            />
-          </div>
+      {/* Foto dominante estilo Cookidoo */}
+      <div className="md:container-app md:pt-4">
+        <div className="recipe-hero-app">
+          <RecipeImage
+            src={imagen}
+            alt={altImagen}
+            fill
+            className="object-cover"
+            priority
+            sizes="100vw"
+          />
         </div>
       </div>
 
-      <div className="container-app py-[var(--section-y)]">
-        <div className="grid gap-12 lg:grid-cols-[1fr_280px]">
-          <div>
-            <RecipeInteractive receta={receta} />
+      <div className="recipe-sheet">
+        <div className="container-app md:px-0">
+          <p className="section-label">
+            {receta.provincia} · {categoriaLabel(receta.categoria)}
+          </p>
+          <h1 className="mt-1 font-sans text-[length:var(--text-3xl)] font-bold tracking-tight text-foreground">
+            {receta.nombre}
+          </h1>
+          <p className="mt-2 max-w-2xl text-base leading-relaxed text-muted-foreground">
+            {receta.descripcion}
+          </p>
+
+          <div className="mt-4 flex flex-wrap items-center gap-2">
+            <span className="meta-chip">
+              <Clock className="size-3.5 text-muted-foreground" aria-hidden />
+              {total} min
+            </span>
+            <span className="meta-chip">
+              <Users className="size-3.5 text-muted-foreground" aria-hidden />
+              {receta.raciones} raciones
+            </span>
+            <span className="meta-chip meta-chip--accent capitalize">
+              <ChefHat className="size-3.5" aria-hidden />
+              {receta.dificultad}
+            </span>
+            <span className="meta-chip inline-flex items-center gap-1.5">
+              <Stars value={receta.valoracion} />
+              <span className="text-muted-foreground">
+                ({receta.numValoraciones})
+              </span>
+            </span>
+          </div>
+
+          <div className="mt-6 grid gap-10 lg:grid-cols-[1fr_280px]">
+            <div>
+              <RecipeInteractive receta={receta} />
+
+              <section className="mt-10">
+                <h2 className="section-title mt-0">Preparación</h2>
+              <p className="mt-1 text-sm text-muted-foreground">
+                Resumen de pasos — usa «Empezar a cocinar» para el modo guiado.
+              </p>
+              <ol className="recipe-steps-app mt-5">
+                {receta.pasos.map((p, idx) => {
+                  const midAd =
+                    idx === Math.floor((receta.pasos.length - 1) / 2) &&
+                    receta.pasos.length >= 3;
+                  return (
+                    <li key={p.numero}>
+                      <div className="app-card flex gap-3 p-4 shadow-none ring-1 ring-border">
+                        <span className="recipe-steps-app__num" aria-hidden>
+                          {p.numero}
+                        </span>
+                        <div className="min-w-0">
+                          <h3 className="font-semibold text-foreground">
+                            {p.titulo}
+                          </h3>
+                          <p className="mt-0.5 text-sm leading-relaxed text-muted-foreground">
+                            {p.descripcion}
+                          </p>
+                          {p.consejo && (
+                            <p className="mt-1.5 text-xs text-aceituna">
+                              Consejo: {p.consejo}
+                            </p>
+                          )}
+                          {p.tiempoSegundos != null && (
+                            <p className="mt-1 text-xs text-muted-foreground">
+                              Temporizador: {Math.round(p.tiempoSegundos / 60)}{" "}
+                              min
+                            </p>
+                          )}
+                        </div>
+                      </div>
+                      {midAd && (
+                        <div className="no-print my-2">
+                          <AdSlot position="in-article" />
+                        </div>
+                      )}
+                    </li>
+                  );
+                })}
+              </ol>
+            </section>
 
             <section className="mt-12">
-              <h2 className="font-display text-2xl font-semibold">Historia</h2>
+              <h2 className="section-title mt-0">Historia</h2>
               <p className="mt-3 max-w-2xl leading-relaxed text-muted-foreground">
                 {receta.historia}
               </p>
             </section>
 
-            <div className="no-print my-10 lg:hidden">
-              <AdSlot position="in-article" />
-            </div>
-
-            <section className="mt-12">
-              <h2 className="font-display text-2xl font-semibold">Preparación</h2>
-              <ol className="mt-6 space-y-6">
-                {receta.pasos.map((p, idx) => (
-                  <li key={p.numero}>
-                    <div className="flex gap-4">
-                      <span className="font-display text-2xl font-semibold text-primary tabular-nums">
-                        {String(p.numero).padStart(2, "0")}
-                      </span>
-                      <div>
-                        <h3 className="font-semibold text-foreground">{p.titulo}</h3>
-                        <p className="mt-1 leading-relaxed text-muted-foreground">
-                          {p.descripcion}
-                        </p>
-                        {p.consejo && (
-                          <p className="mt-2 text-sm text-aceituna">Consejo: {p.consejo}</p>
-                        )}
-                        {p.tiempoSegundos != null && (
-                          <p className="mt-1 text-xs text-muted-foreground">
-                            Temporizador: {Math.round(p.tiempoSegundos / 60)} min
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    {/* In-article a mitad de pasos — nunca en modo cocina */}
-                    {idx === Math.floor((receta.pasos.length - 1) / 2) &&
-                      receta.pasos.length >= 3 && (
-                        <div className="no-print my-8">
-                          <AdSlot position="in-article" />
-                        </div>
-                      )}
-                  </li>
-                ))}
-              </ol>
-            </section>
-
             {receta.maridaje && (
-              <section className="mt-12">
-                <h2 className="font-display text-2xl font-semibold">Maridaje</h2>
+              <section className="mt-10">
+                <h2 className="section-title mt-0">Maridaje</h2>
                 <p className="mt-3 text-muted-foreground">{receta.maridaje}</p>
               </section>
             )}
 
             {receta.variantes && (
-              <section className="mt-12">
-                <h2 className="font-display text-2xl font-semibold">Variantes</h2>
+              <section className="mt-10">
+                <h2 className="section-title mt-0">Variantes</h2>
                 <p className="mt-3 text-muted-foreground">{receta.variantes}</p>
               </section>
             )}
 
+            <section className="mt-12">
+              <h2 className="section-title mt-0">Valoraciones</h2>
+              <div className="mt-4">
+                <RecipeSocial
+                  recipeId={receta.id}
+                  fallbackRating={receta.valoracion}
+                  fallbackCount={receta.numValoraciones}
+                />
+              </div>
+            </section>
+
+            <RecipeFaq items={receta.faq ?? []} />
+
             {relacionadas.length > 0 && (
-              <section className="mt-16 border-t border-border pt-10">
-                <h2 className="font-display text-2xl font-semibold">Recetas relacionadas</h2>
-                <ul className="mt-4 divide-y divide-border">
+              <section className="mt-14 border-t border-border pt-10">
+                <h2 className="section-title mt-0">Recetas relacionadas</h2>
+                <div className="explore-grid mt-5">
                   {relacionadas.map((r) => (
-                    <li key={r.id}>
-                      <Link href={`/recetas/${r.id}`} className="link-row">
-                        <span className="link-row-title">{r.nombre}</span>
-                        <span className="mt-0.5 block text-sm text-muted-foreground">
-                          {r.provincia}
-                        </span>
-                      </Link>
-                    </li>
+                    <RecipeCard key={r.id} receta={toResumen(r)} />
                   ))}
-                </ul>
+                </div>
               </section>
             )}
-          </div>
-
-          <aside className="no-print hidden lg:block">
-            <div className="sticky top-24">
-              <AdSlot position="sidebar" />
             </div>
-          </aside>
+
+            <aside className="no-print hidden lg:block">
+              <div className="sticky top-20">
+                <AdSlot position="sidebar" />
+              </div>
+            </aside>
+          </div>
         </div>
       </div>
     </article>

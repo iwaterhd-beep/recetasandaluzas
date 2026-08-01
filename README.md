@@ -1,36 +1,65 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Recetas Andaluzas
 
-## Getting Started
+Web de cocina andaluza: [recetasandaluzas.com](https://recetasandaluzas.com)  
+Repo: https://github.com/iwaterhd-beep/recetasandaluzas
 
-First, run the development server:
+Next.js (App Router) + TypeScript + Tailwind. Catálogo estático (~135 recetas), buscador Fuse.js, favoritos y lista de la compra, modo cocina con temporizador, auth Supabase (email + Google), paneles `/cuenta` y `/admin`, SEO (JSON-LD Recipe), PWA y huecos AdSense.
+
+## Desarrollo
 
 ```bash
+npm install
+cp .env.example .env.local   # rellena claves
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Abre [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run build   # producción
+npm start
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Variables de entorno
 
-## Learn More
+Copia `.env.example` → `.env.local` (y las mismas en Vercel):
 
-To learn more about Next.js, take a look at the following resources:
+| Variable | Uso |
+| --- | --- |
+| `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Anon / publishable key (nunca service role en el cliente) |
+| `ADMIN_EMAILS` | Emails admin, separados por coma |
+| `NEXT_PUBLIC_ADSENSE_*` | AdSense (opcional) |
+| `NEXT_PUBLIC_AMAZON_AFFILIATE_TAG` | Afiliados Amazon (opcional) |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Sin Supabase la web funciona; login, valoraciones cloud y admin quedan desactivados.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Supabase
 
-## Deploy on Vercel
+1. Crea un proyecto (región recomendada `eu-west-1`) en la org **tpv**. Si el plan Free está al límite (2 proyectos), pausa o elimina otro proyecto o sube de plan.
+2. Aplica las migraciones en `supabase/migrations/` (SQL Editor o CLI):
+   - `20260801000000_init.sql` — tablas, RLS, triggers
+   - `20260801000001_seed_recipe_stats.sql` — stats iniciales
+3. Auth → Providers:
+   - **Email** activado
+   - **Google**: OAuth client en Google Cloud; redirect URI de Supabase  
+     `https://<PROJECT_REF>.supabase.co/auth/v1/callback`
+4. Authentication → URL configuration:
+   - Site URL: `https://recetasandaluzas.com` (y `http://localhost:3000` en local)
+   - Redirect URLs: `http://localhost:3000/auth/callback`, `https://recetasandaluzas.com/auth/callback`, preview de Vercel
+5. (Opcional) Sign in with Apple cuando tengas Apple Developer — la UI ya muestra “próximamente”.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Vercel
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Conecta el repo `iwaterhd-beep/recetasandaluzas`.
+2. Añade las env vars de `.env.example`.
+3. Redeploy tras configurar Supabase + Google OAuth.
+
+## Estructura útil
+
+- `src/data/recetas/` — recetas tipadas (+ `ampliacion.ts`)
+- `src/app/recetas/[id]/cocinar` — modo cocina + feedback
+- `src/app/cuenta` — favoritos sync, historial, top semanal
+- `src/app/admin` — usuarios, visitas, ratings, moderación
+- `src/lib/supabase/` — clientes SSR / browser
+- `supabase/migrations/` — schema + seed

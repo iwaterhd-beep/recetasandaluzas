@@ -1,0 +1,31 @@
+Animaciones de alimento (legado Noto WebP en /animations/cocina/*.webp):
+Google Noto Color Emoji (Animated)
+Fuente: https://fonts.gstatic.com/s/e/notoemoji/
+Catálogo: https://googlefonts.github.io/noto-emoji-animation/
+Licencia: SIL Open Font License 1.1 / Apache 2.0 (Noto)
+
+Pack modo cocina (activo):
+IconScout «Free Food And Drinks Animation Pack» (#344419)
+https://iconscout.com/free-lottie-animation-pack/free-food-and-drinks-animation-pack_344419
+Origen: Google Inc. — Noto Emoji animados (mismos assets en fonts.gstatic.com)
+Licencia IconScout: Creative Commons Attribution 4.0
+Archivos: public/animations/cocina/lottie/pack-food-drinks/
+  cooking, steaming-bowl, spaghetti, pour, tomato, root-vegetable,
+  hot-beverage, burrito, popcorn, champagne-bottle, clinking-beer-mugs,
+  clinking-glasses, tropical-drink, wine-glass, bread, paper
+  (.json Lottie + .webp)
+  paper: Noto Emoji «roll of paper» (1f9fb) + sway Lottie
+    https://fonts.gstatic.com/s/e/notoemoji/latest/1f9fb/
+  flour: LottieFiles «Harinas» (Juan David Riaño Rojas), Lottie Simple License
+    https://lottiefiles.com/free-animation/harinas-x8tQGBWTGA
+
+Mapeo lógico (el SUJETO del paso manda; luego la técnica):
+  remojar/empapar pan     → bread
+  escaldar tomates        → tomato
+  aliñar / verter         → pour
+  hervir / guisar         → steaming-bowl (pasta→spaghetti, leche→hot-beverage)
+  freír / sofrito         → cooking
+  cortar verdura / pan    → root-vegetable / bread
+  triturar salmorejo      → tomato
+  amasar / enrollar        → burrito (o bread)
+  servir                  → bebida/plato según texto
