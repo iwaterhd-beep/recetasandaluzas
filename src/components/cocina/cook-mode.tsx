@@ -182,7 +182,7 @@ export function CookMode({ receta }: CookModeProps) {
           </p>
 
           <div className="cook-done__rating">
-            <CookFeedback recipeId={receta.id} />
+            <CookFeedback recipeId={receta.id} recipeName={receta.nombre} />
           </div>
 
           <div className="cook-done__ads">
