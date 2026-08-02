@@ -44,42 +44,6 @@ function pickParaTi(todas: RecetaResumen[], n = 8): RecetaResumen[] {
   return picked;
 }
 
-/** Ideas para explorar: más variedad de categoría, guisos/tapas/postres, sin repetir Para ti. */
-function pickMasIdeas(
-  todas: RecetaResumen[],
-  excludeIds: Set<string>,
-  n = 12,
-): RecetaResumen[] {
-  const pool = todas.filter((r) => !excludeIds.has(r.id));
-  const ranked = [...pool].sort(
-    (a, b) =>
-      b.numValoraciones - a.numValoraciones || b.valoracion - a.valoracion,
-  );
-  const prefer = ranked.filter((r) =>
-    ["tapas", "guisos", "postres", "pescados", "arroces"].includes(r.categoria),
-  );
-  const ordered = [
-    ...prefer,
-    ...ranked.filter((r) => !prefer.some((p) => p.id === r.id)),
-  ];
-  const picked: RecetaResumen[] = [];
-  const catCount = new Map<string, number>();
-
-  for (const r of ordered) {
-    if (picked.length >= n) break;
-    const c = catCount.get(r.categoria) ?? 0;
-    if (c >= 3) continue;
-    picked.push(r);
-    catCount.set(r.categoria, c + 1);
-  }
-
-  for (const r of ranked) {
-    if (picked.length >= n) break;
-    if (!picked.some((p) => p.id === r.id)) picked.push(r);
-  }
-  return picked;
-}
-
 export const metadata: Metadata = {
   ...buildPageMetadata({
     title: SITE.titleDefault,
@@ -128,8 +92,6 @@ export default function HomePage() {
 
   const slides = todas.slice(0, 5);
   const paraTi = pickParaTi(todas, 8);
-  const paraTiIds = new Set(paraTi.map((r) => r.id));
-  const masRecetas = pickMasIdeas(todas, paraTiIds, 12);
 
   return (
     <div>
@@ -165,7 +127,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <MasIdeasSection recetas={masRecetas} />
+      <MasIdeasSection recetas={todas} />
 
       <section className="border-t border-border bg-surface">
         <Stagger className="container-app grid grid-cols-3 gap-3 py-6 md:grid-cols-3 md:gap-8 md:py-[var(--section-y)]">

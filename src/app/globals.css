@@ -1217,9 +1217,12 @@
   }
 
   .mas-ideas__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
     flex-shrink: 0;
     min-height: 2.35rem;
-    padding: 0.4rem 0.95rem;
+    padding: 0.4rem 0.85rem 0.4rem 0.95rem;
     border: 1px solid var(--border);
     border-radius: 999px;
     background: var(--surface);
@@ -1242,6 +1245,78 @@
     color: #fff;
   }
 
+  .mas-ideas__chip-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.35rem;
+    height: 1.35rem;
+    padding: 0 0.35rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--foreground) 8%, transparent);
+    font-size: 0.68rem;
+    font-weight: 800;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .mas-ideas__chip.is-active .mas-ideas__chip-count {
+    background: rgb(255 255 255 / 0.2);
+  }
+
+  .mas-ideas__panel {
+    margin-top: 0.15rem;
+  }
+
+  .mas-ideas__panel-head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.75rem 1.25rem;
+    margin-bottom: 1rem;
+  }
+
+  .mas-ideas__panel-title {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.45rem 0.65rem;
+    font-size: 1.05rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
+  }
+
+  .mas-ideas__panel-count {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--muted-foreground);
+  }
+
+  .mas-ideas__panel-lead {
+    margin: 0.3rem 0 0;
+    max-width: 34rem;
+    font-size: 0.9rem;
+    line-height: 1.45;
+    color: var(--muted-foreground);
+  }
+
+  .mas-ideas__panel-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.82rem;
+    font-weight: 750;
+    color: var(--olivo);
+    text-decoration: none;
+  }
+
+  .mas-ideas__panel-link:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
   .mas-ideas__list {
     list-style: none;
     margin: 0;
@@ -1257,6 +1332,33 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 0.9rem 1rem;
     }
+  }
+
+  .mas-ideas__empty {
+    grid-column: 1 / -1;
+    padding: 1.25rem 1rem;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    border: 1px dashed var(--border);
+    color: var(--muted-foreground);
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .mas-ideas__footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 1.15rem;
+  }
+
+  .mas-ideas__more {
+    margin: 0;
+    font-size: 0.85rem;
+    font-weight: 650;
+    color: var(--muted-foreground);
   }
 
   .idea-card {
