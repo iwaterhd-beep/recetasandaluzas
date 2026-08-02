@@ -648,6 +648,216 @@
     color: var(--foreground);
   }
 
+  /* —— Para ti (rail tipo Cookidoo) —— */
+  .para-ti {
+    background: var(--background);
+    padding-block: 1.5rem clamp(1.75rem, 4vw, 3rem);
+  }
+
+  .para-ti__head {
+    margin-bottom: 1rem;
+  }
+
+  @media (min-width: 768px) {
+    .para-ti__head {
+      margin-bottom: 1.35rem;
+    }
+  }
+
+  .para-ti__intro {
+    max-width: 36rem;
+  }
+
+  .para-ti__title-row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin-top: 0.2rem;
+  }
+
+  .para-ti__all {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--olivo);
+    text-decoration: none;
+  }
+
+  .para-ti__all:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .para-ti__rail {
+    display: flex;
+    gap: 0.85rem;
+    list-style: none;
+    margin: 0;
+    padding: 0.15rem 0 0.65rem;
+    padding-inline: clamp(0.85rem, 3vw, 1.75rem);
+    max-width: 72rem;
+    margin-inline: auto;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: clamp(0.85rem, 3vw, 1.75rem);
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .para-ti__rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  .para-ti__item {
+    flex: 0 0 min(68vw, 15.5rem);
+    scroll-snap-align: start;
+  }
+
+  .para-ti__item--lead {
+    flex-basis: min(78vw, 19rem);
+  }
+
+  @media (min-width: 768px) {
+    .para-ti__item {
+      flex-basis: 15.25rem;
+    }
+
+    .para-ti__item--lead {
+      flex-basis: 21.5rem;
+    }
+  }
+
+  .para-ti-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    box-shadow: var(--shadow-soft);
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 180ms ease, transform 180ms ease;
+  }
+
+  .para-ti-card:hover {
+    box-shadow: var(--shadow-lift);
+  }
+
+  .para-ti-card__media {
+    position: relative;
+    aspect-ratio: 4 / 5;
+    background: var(--surface-muted);
+    overflow: hidden;
+  }
+
+  .para-ti-card--lead .para-ti-card__media {
+    aspect-ratio: 5 / 6;
+  }
+
+  .para-ti-card__shade {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to top,
+      rgb(20 18 14 / 0.55) 0%,
+      rgb(20 18 14 / 0.08) 42%,
+      transparent 70%
+    );
+    pointer-events: none;
+  }
+
+  .para-ti-card__chips {
+    position: absolute;
+    left: 0.65rem;
+    bottom: 0.65rem;
+    z-index: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .para-ti-card__chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    min-height: 1.65rem;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.94);
+    color: var(--foreground);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.12);
+  }
+
+  .para-ti-card__chip--rating {
+    color: var(--olivo);
+  }
+
+  .para-ti-card__fav {
+    position: absolute;
+    top: 0.55rem;
+    right: 0.55rem;
+    z-index: 2;
+    display: grid;
+    place-items: center;
+    width: 2.65rem;
+    height: 2.65rem;
+    border: none;
+    border-radius: 999px;
+    background: rgb(255 255 255 / 0.95);
+    color: var(--foreground);
+    box-shadow: var(--shadow-soft);
+    cursor: pointer;
+  }
+
+  .para-ti-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    padding: 0.85rem 0.95rem 1rem;
+    flex: 1;
+  }
+
+  .para-ti-card__place {
+    margin: 0;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+  }
+
+  .para-ti-card__title {
+    margin: 0;
+    font-family: var(--font-dm-sans), system-ui, sans-serif;
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+    color: var(--foreground);
+  }
+
+  .para-ti-card--lead .para-ti-card__title {
+    font-size: 1.15rem;
+  }
+
+  .para-ti-card__cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    margin: 0.35rem 0 0;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--olivo);
+  }
+
   .explore-grid {
     display: grid;
     gap: 0.75rem;

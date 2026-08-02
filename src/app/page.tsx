@@ -2,12 +2,47 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight, Clock, Flame, ShoppingBasket } from "lucide-react";
 import { HomeHero } from "@/components/home/home-hero";
+import { ParaTiSection } from "@/components/home/para-ti-section";
 import { RecipeCard } from "@/components/recetas/recipe-card";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/reveal";
 import { CATEGORIAS, PROVINCIAS, SITE } from "@/lib/constants";
 import { getAllRecetas, getAllResumenes } from "@/lib/data";
 import { buildPageMetadata, organizationJsonLd, websiteJsonLd } from "@/lib/seo";
+import type { RecetaResumen } from "@/types/receta";
+
+/** Mezcla valoraciones altas con variedad de categoría/provincia y platos asequibles. */
+function pickParaTi(todas: RecetaResumen[], n = 8): RecetaResumen[] {
+  const ranked = [...todas].sort(
+    (a, b) =>
+      b.valoracion - a.valoracion || b.numValoraciones - a.numValoraciones,
+  );
+  const accessible = ranked.filter(
+    (r) => r.dificultad === "fácil" || r.tiempoTotal <= 45,
+  );
+  const pool = [...accessible, ...ranked.filter((r) => !accessible.includes(r))];
+  const picked: RecetaResumen[] = [];
+  const catCount = new Map<string, number>();
+  const provCount = new Map<string, number>();
+
+  for (const r of pool) {
+    if (picked.length >= n) break;
+    if (picked.some((p) => p.id === r.id)) continue;
+    const c = catCount.get(r.categoria) ?? 0;
+    const p = provCount.get(r.provincia) ?? 0;
+    if (c >= 2) continue;
+    if (p >= 2) continue;
+    picked.push(r);
+    catCount.set(r.categoria, c + 1);
+    provCount.set(r.provincia, p + 1);
+  }
+
+  for (const r of ranked) {
+    if (picked.length >= n) break;
+    if (!picked.some((p) => p.id === r.id)) picked.push(r);
+  }
+  return picked;
+}
 
 export const metadata: Metadata = {
   ...buildPageMetadata({
@@ -55,40 +90,16 @@ export default function HomePage() {
     );
 
   const slides = todas.slice(0, 5);
-  const paraTi = todas.slice(0, 6);
-  const masRecetas = todas.slice(6, 12);
+  const paraTi = pickParaTi(todas, 8);
+  const paraTiIds = new Set(paraTi.map((r) => r.id));
+  const masRecetas = todas.filter((r) => !paraTiIds.has(r.id)).slice(0, 6);
 
   return (
     <div>
       <JsonLd data={[websiteJsonLd(), organizationJsonLd()]} />
       <HomeHero slides={slides} totalRecetas={total} />
 
-      <section className="bg-background">
-        <div className="container-app py-6 md:py-[var(--section-y)]">
-          <Reveal>
-            <div className="flex items-baseline justify-between gap-3">
-              <h2 className="app-screen__title !text-[length:var(--text-xl)]">
-                Para ti
-              </h2>
-              <Link
-                href="/recetas"
-                className="inline-flex items-center gap-1 text-sm font-bold text-olivo"
-              >
-                Ver todas
-                <ArrowRight className="size-4" />
-              </Link>
-            </div>
-          </Reveal>
-
-          <ul className="explore-grid mt-4 md:mt-8">
-            {paraTi.map((r, i) => (
-              <li key={r.id}>
-                <RecipeCard receta={r} index={i} badge="Para ti" />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      <ParaTiSection recetas={paraTi} />
 
       <section className="bg-surface-muted/60">
         <div className="container-app py-5 md:py-8">
