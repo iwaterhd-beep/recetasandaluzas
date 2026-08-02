@@ -102,8 +102,10 @@ export default function PrivacidadPage() {
             comunidad.
           </li>
           <li>
-            <strong>Google</strong> (si AdSense u OAuth están activos): publicidad
-            o acceso con cuenta Google bajo sus políticas.
+            <strong>Google</strong> (Analytics 4, y AdSense u OAuth si están
+            activos): medición de audiencia, publicidad o acceso con cuenta
+            Google bajo sus políticas. El Measurement ID de Analytics se carga
+            solo si está configurado en el entorno del sitio.
           </li>
           <li>
             <strong>Amazon</strong> (si hay enlaces de afiliados): al hacer clic

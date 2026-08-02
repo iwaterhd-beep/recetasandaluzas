@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { DM_Sans, Newsreader } from "next/font/google";
 import { SkipLink } from "@/components/a11y/skip-link";
 import { AdSenseScript } from "@/components/ads/adsense-script";
+import { GoogleAnalyticsScript } from "@/components/analytics/google-analytics";
 import { BottomNav } from "@/components/layout/bottom-nav";
 import { Footer } from "@/components/layout/footer";
 import { Header } from "@/components/layout/header";
@@ -137,6 +138,7 @@ export default function RootLayout({
         />
         <SkipLink />
         <AdSenseScript />
+        <GoogleAnalyticsScript />
         <RegisterSW />
         <Providers>
           <Header />
