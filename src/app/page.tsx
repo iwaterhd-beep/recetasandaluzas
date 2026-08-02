@@ -2,8 +2,8 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowRight, Clock, Flame, ShoppingBasket } from "lucide-react";
 import { HomeHero } from "@/components/home/home-hero";
+import { MasIdeasSection } from "@/components/home/mas-ideas-section";
 import { ParaTiSection } from "@/components/home/para-ti-section";
-import { RecipeCard } from "@/components/recetas/recipe-card";
 import { JsonLd } from "@/components/seo/json-ld";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/reveal";
 import { CATEGORIAS, PROVINCIAS, SITE } from "@/lib/constants";
@@ -35,6 +35,42 @@ function pickParaTi(todas: RecetaResumen[], n = 8): RecetaResumen[] {
     picked.push(r);
     catCount.set(r.categoria, c + 1);
     provCount.set(r.provincia, p + 1);
+  }
+
+  for (const r of ranked) {
+    if (picked.length >= n) break;
+    if (!picked.some((p) => p.id === r.id)) picked.push(r);
+  }
+  return picked;
+}
+
+/** Ideas para explorar: más variedad de categoría, guisos/tapas/postres, sin repetir Para ti. */
+function pickMasIdeas(
+  todas: RecetaResumen[],
+  excludeIds: Set<string>,
+  n = 12,
+): RecetaResumen[] {
+  const pool = todas.filter((r) => !excludeIds.has(r.id));
+  const ranked = [...pool].sort(
+    (a, b) =>
+      b.numValoraciones - a.numValoraciones || b.valoracion - a.valoracion,
+  );
+  const prefer = ranked.filter((r) =>
+    ["tapas", "guisos", "postres", "pescados", "arroces"].includes(r.categoria),
+  );
+  const ordered = [
+    ...prefer,
+    ...ranked.filter((r) => !prefer.some((p) => p.id === r.id)),
+  ];
+  const picked: RecetaResumen[] = [];
+  const catCount = new Map<string, number>();
+
+  for (const r of ordered) {
+    if (picked.length >= n) break;
+    const c = catCount.get(r.categoria) ?? 0;
+    if (c >= 3) continue;
+    picked.push(r);
+    catCount.set(r.categoria, c + 1);
   }
 
   for (const r of ranked) {
@@ -92,7 +128,7 @@ export default function HomePage() {
   const slides = todas.slice(0, 5);
   const paraTi = pickParaTi(todas, 8);
   const paraTiIds = new Set(paraTi.map((r) => r.id));
-  const masRecetas = todas.filter((r) => !paraTiIds.has(r.id)).slice(0, 6);
+  const masRecetas = pickMasIdeas(todas, paraTiIds, 12);
 
   return (
     <div>
@@ -128,32 +164,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="bg-background">
-        <div className="container-app py-6 md:py-[var(--section-y)]">
-          <Reveal>
-            <div className="flex items-baseline justify-between gap-3">
-              <h2 className="app-screen__title !text-[length:var(--text-xl)]">
-                Más ideas
-              </h2>
-              <Link
-                href="/recetas"
-                className="inline-flex items-center gap-1 text-sm font-bold text-olivo"
-              >
-                Explorar
-                <ArrowRight className="size-4" />
-              </Link>
-            </div>
-          </Reveal>
-
-          <ul className="explore-grid mt-4 md:mt-8">
-            {masRecetas.map((r, i) => (
-              <li key={r.id}>
-                <RecipeCard receta={r} index={i} />
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      <MasIdeasSection recetas={masRecetas} />
 
       <section className="border-t border-border bg-surface">
         <Stagger className="container-app grid grid-cols-3 gap-3 py-6 md:grid-cols-3 md:gap-8 md:py-[var(--section-y)]">
