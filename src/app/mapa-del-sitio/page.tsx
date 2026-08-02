@@ -52,6 +52,11 @@ export default function MapaDelSitioPage() {
                 Privacidad
               </a>
             </li>
+            <li>
+              <a className="text-primary hover:underline" href="/contacto">
+                Contacto
+              </a>
+            </li>
           </ul>
         </section>
 

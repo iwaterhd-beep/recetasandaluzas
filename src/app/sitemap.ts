@@ -16,6 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${base}/mapa-del-sitio`, lastModified: now, changeFrequency: "weekly", priority: 0.4 },
     { url: `${base}/aviso-legal`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
     { url: `${base}/privacidad`, lastModified: now, changeFrequency: "yearly", priority: 0.2 },
+    { url: `${base}/contacto`, lastModified: now, changeFrequency: "yearly", priority: 0.35 },
   ];
 
   const categorias: MetadataRoute.Sitemap = CATEGORIAS.map((c) => ({

@@ -26,6 +26,9 @@ export function Footer() {
           <Link href="/privacidad" className="hover:text-foreground">
             Privacidad
           </Link>
+          <Link href="/contacto" className="hover:text-foreground">
+            Contacto
+          </Link>
         </nav>
         <p className="mt-3 text-[0.65rem] text-muted-foreground">
           © {new Date().getFullYear()} {SITE.name}
@@ -124,6 +127,14 @@ export function Footer() {
                 className="text-sm text-muted-foreground transition-colors hover:text-foreground"
               >
                 Privacidad
+              </Link>
+            </li>
+            <li>
+              <Link
+                href="/contacto"
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
+                Contacto
               </Link>
             </li>
           </ul>

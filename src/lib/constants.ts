@@ -11,6 +11,8 @@ export const SITE = {
   /** Título principal para Google (~55–60 caracteres). */
   titleDefault:
     "Recetas Andaluzas | Gazpacho, salmorejo y cocina andaluza",
+  /** Contacto público (aviso legal / privacidad / formulario). */
+  contactEmail: "contacto@recetasandaluzas.com",
 } as const;
 
 export const PROVINCIAS: { slug: string; nombre: Provincia }[] = [
