@@ -42,23 +42,14 @@ export default function CuentaClient() {
         if (!localFavs.includes(id)) toggleFavorito(id);
       }
 
-      const since = new Date();
-      since.setDate(since.getDate() - 7);
-      const { data: events } = await supabase
-        .from("recipe_events")
-        .select("recipe_id")
-        .eq("event_type", "view")
-        .gte("created_at", since.toISOString());
-
-      const counts = new Map<string, number>();
-      for (const e of events ?? []) {
-        counts.set(e.recipe_id, (counts.get(e.recipe_id) ?? 0) + 1);
-      }
+      const { data: week } = await supabase.rpc("weekly_top_recipes", {
+        p_limit: 6,
+      });
       setWeekTop(
-        [...counts.entries()]
-          .map(([recipe_id, n]) => ({ recipe_id, n }))
-          .sort((a, b) => b.n - a.n)
-          .slice(0, 6),
+        (week ?? []).map((row: { recipe_id: string; views: number | string }) => ({
+          recipe_id: row.recipe_id,
+          n: Number(row.views),
+        })),
       );
 
       const { data: done } = await supabase

@@ -156,6 +156,24 @@ export type Database = {
         Args: Record<string, never>;
         Returns: boolean;
       };
+      admin_dashboard_metrics: {
+        Args: Record<string, never>;
+        Returns: {
+          users: number;
+          views: number;
+          views_week: number;
+          cook_starts: number;
+          cook_completes: number;
+          ratings: number;
+          comments: number;
+          comments_hidden: number;
+          favorites: number;
+        };
+      };
+      weekly_top_recipes: {
+        Args: { p_limit?: number };
+        Returns: { recipe_id: string; views: number }[];
+      };
     };
     Enums: Record<string, never>;
     CompositeTypes: Record<string, never>;
