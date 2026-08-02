@@ -36,8 +36,8 @@ export function Header() {
   return (
     <header className="app-header no-print">
       <div className="app-header__bar">
-        <Link href="/" className="app-header__brand" aria-label="Inicio">
-          Recetas<span>And</span>
+        <Link href="/" className="app-header__brand" aria-label="Recetas Andaluzas — Inicio">
+          Recetas <span>Andaluzas</span>
         </Link>
 
         {/* Desktop search */}

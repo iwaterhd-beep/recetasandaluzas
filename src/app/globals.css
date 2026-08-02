@@ -282,11 +282,13 @@
   .app-header__brand {
     flex-shrink: 0;
     font-family: var(--font-dm-sans), system-ui, sans-serif;
-    font-size: 1.05rem;
+    font-size: clamp(0.92rem, 2.6vw, 1.1rem);
     font-weight: 800;
     letter-spacing: -0.03em;
+    line-height: 1.15;
     color: var(--foreground);
     text-decoration: none;
+    white-space: nowrap;
   }
 
   .app-header__brand span {
