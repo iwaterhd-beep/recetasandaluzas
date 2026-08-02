@@ -48,6 +48,7 @@ function getFuse(items: RecetaSearchDoc[]) {
       threshold: 0.38,
       ignoreLocation: true,
       includeScore: true,
+      minMatchCharLength: 1,
     });
   } else {
     fuse.setCollection(items);
@@ -66,10 +67,48 @@ export function sugerenciasBusqueda(
 ): RecetaSearchDoc[] {
   const q = query.trim();
   if (!q) return [];
-  return getFuse(items)
-    .search(q)
-    .slice(0, limite)
-    .map((h) => h.item);
+
+  const norm = (s: string) =>
+    s
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/\p{M}/gu, "");
+
+  const nq = norm(q);
+
+  /** Prioriza coincidencias por nombre mientras se escribe. */
+  const byName = items
+    .map((item) => {
+      const n = norm(item.nombre);
+      let score = 0;
+      if (n.startsWith(nq)) score = 4;
+      else if (n.split(/[\s\-]+/).some((w) => w.startsWith(nq))) score = 3;
+      else if (n.includes(nq)) score = 2;
+      else if (norm(item.provincia).startsWith(nq)) score = 1;
+      else if (item.ingredientes.some((i) => norm(i).includes(nq))) score = 1;
+      return { item, score };
+    })
+    .filter((x) => x.score > 0)
+    .sort(
+      (a, b) =>
+        b.score - a.score ||
+        b.item.valoracion - a.item.valoracion ||
+        a.item.nombre.localeCompare(b.item.nombre, "es"),
+    );
+
+  if (byName.length >= limite || q.length <= 2) {
+    return byName.slice(0, limite).map((x) => x.item);
+  }
+
+  const seen = new Set(byName.map((x) => x.item.id));
+  const merged = byName.map((x) => x.item);
+  for (const hit of getFuse(items).search(q)) {
+    if (seen.has(hit.item.id)) continue;
+    merged.push(hit.item);
+    seen.add(hit.item.id);
+    if (merged.length >= limite) break;
+  }
+  return merged.slice(0, limite);
 }
 
 function scorePorDespensa(doc: RecetaSearchDoc, tengo: string[]): number {

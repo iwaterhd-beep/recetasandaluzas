@@ -2,10 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ArrowRight, Search } from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { FormEvent, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
+import { RecipeSearchBox } from "@/components/recetas/recipe-search-box";
 import { SITE } from "@/lib/constants";
 import type { RecetaResumen } from "@/types/receta";
 
@@ -15,10 +15,8 @@ interface HomeHeroProps {
 }
 
 export function HomeHero({ slides, totalRecetas }: HomeHeroProps) {
-  const router = useRouter();
   const reduce = useReducedMotion();
   const [index, setIndex] = useState(0);
-  const [q, setQ] = useState("");
   const current = slides[index] ?? slides[0];
 
   useEffect(() => {
@@ -28,12 +26,6 @@ export function HomeHero({ slides, totalRecetas }: HomeHeroProps) {
     }, 6000);
     return () => window.clearInterval(id);
   }, [reduce, slides.length]);
-
-  const onSearch = (e: FormEvent) => {
-    e.preventDefault();
-    const query = q.trim();
-    router.push(query ? `/recetas?q=${encodeURIComponent(query)}` : "/recetas");
-  };
 
   if (!current) return null;
 
@@ -77,30 +69,7 @@ export function HomeHero({ slides, totalRecetas }: HomeHeroProps) {
               Cocina guiada · {totalRecetas} recetas
             </p>
 
-            <form
-              onSubmit={onSearch}
-              className="mt-5 flex w-full max-w-md items-center gap-2 rounded-full bg-white p-1.5 shadow-[var(--shadow-lift)]"
-              role="search"
-            >
-              <Search
-                className="ml-3 size-4 shrink-0 text-muted-foreground"
-                aria-hidden
-              />
-              <input
-                type="search"
-                value={q}
-                onChange={(e) => setQ(e.target.value)}
-                placeholder="Buscar recetas…"
-                aria-label="Buscar recetas"
-                className="min-w-0 flex-1 bg-transparent py-2.5 text-sm text-foreground outline-none placeholder:text-muted-foreground"
-              />
-              <button
-                type="submit"
-                className="btn btn-primary min-h-11 rounded-full px-5"
-              >
-                Buscar
-              </button>
-            </form>
+            <RecipeSearchBox variant="hero" className="mt-5 w-full max-w-md" />
 
             <div className="mt-4 flex flex-wrap items-center gap-2">
               <Link

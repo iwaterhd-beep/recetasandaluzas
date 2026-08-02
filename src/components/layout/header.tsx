@@ -1,11 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { FormEvent, useState } from "react";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 import { Menu, Search, X } from "lucide-react";
 import { AuthButton } from "@/components/auth/auth-button";
 import { ThemeToggle } from "@/components/layout/theme-toggle";
+import { RecipeSearchBox } from "@/components/recetas/recipe-search-box";
 
 const NAV = [
   { href: "/recetas", label: "Recetas" },
@@ -16,22 +17,16 @@ const NAV = [
 
 export function Header() {
   const pathname = usePathname() ?? "/";
-  const router = useRouter();
-  const [q, setQ] = useState("");
   const [open, setOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
 
   if (pathname.includes("/cocinar")) return null;
 
-  function onSearch(e: FormEvent) {
-    e.preventDefault();
-    const query = q.trim();
-    router.push(query ? `/recetas?q=${encodeURIComponent(query)}` : "/recetas");
-    setOpen(false);
-    setSearchOpen(false);
-  }
-
   const isHome = pathname === "/";
+  const closeSearch = () => {
+    setSearchOpen(false);
+    setOpen(false);
+  };
 
   return (
     <header className="app-header no-print">
@@ -40,21 +35,11 @@ export function Header() {
           Recetas <span>Andaluzas</span>
         </Link>
 
-        {/* Desktop search */}
-        <form
-          onSubmit={onSearch}
-          className="search-pill app-header__search-desktop"
-          role="search"
-        >
-          <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-          <input
-            type="search"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Buscar recetas…"
-            aria-label="Buscar recetas"
-          />
-        </form>
+        <RecipeSearchBox
+          variant="header"
+          className="app-header__search-desktop"
+          onNavigate={closeSearch}
+        />
 
         <nav className="app-header__nav-desktop" aria-label="Principal">
           {NAV.map((item) => {
@@ -107,21 +92,13 @@ export function Header() {
       </div>
 
       {searchOpen && (
-        <form
-          onSubmit={onSearch}
-          className="app-header__search-sheet search-pill"
-          role="search"
-        >
-          <Search className="size-4 shrink-0 text-muted-foreground" aria-hidden />
-          <input
-            type="search"
-            value={q}
-            onChange={(e) => setQ(e.target.value)}
-            placeholder="Buscar recetas…"
-            aria-label="Buscar recetas"
+        <div className="app-header__search-sheet">
+          <RecipeSearchBox
+            variant="sheet"
             autoFocus
+            onNavigate={closeSearch}
           />
-        </form>
+        </div>
       )}
 
       {open && (
