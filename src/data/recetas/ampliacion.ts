@@ -20,7 +20,7 @@ function receta(datos: Datos): Receta {
         3,
         "Terminar la cocción",
         elaboracion[2],
-        base.tiempoCoccion
+        base.tiempoCoccion > 0
           ? { tiempoSegundos: Math.min(base.tiempoCoccion, 45) * 60 }
           : undefined,
       ),

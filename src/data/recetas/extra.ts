@@ -16,7 +16,7 @@ function receta(datos: Datos): Receta {
     pasos: [
       paso(1, "Preparar los ingredientes", elaboracion[0]),
       paso(2, "Formar la base", elaboracion[1]),
-      paso(3, "Cocinar o reposar", elaboracion[2], base.tiempoCoccion ? { tiempoSegundos: base.tiempoCoccion * 60 } : undefined),
+      paso(3, "Cocinar o reposar", elaboracion[2], base.tiempoCoccion > 0 ? { tiempoSegundos: Math.min(base.tiempoCoccion, 90) * 60 } : undefined),
       paso(4, "Terminar y servir", elaboracion[3]),
     ],
     imagenes: [IMG],

@@ -107,7 +107,7 @@ export const sopasEnsaladas: Receta[] = [
       ),
       paso(
         5,
-        "Reposir y servir",
+        "Enfriar",
         "Enfría 2 horas. Sirve en cuenco con huevo picado y jamón por encima, y un hilo de aceite.",
         { tiempoSegundos: 7200, consejo: "Si queda corto de densidad, añade más miga; si muy espeso, un chorrito de agua fría." },
       ),
@@ -245,7 +245,7 @@ export const sopasEnsaladas: Receta[] = [
       paso(1, "Preparar base", "Pela tomates. Remoja el pan. Trocea pimiento y ajo."),
       paso(2, "Triturar", "Bate todo con sal y vinagre hasta pasta muy espesa."),
       paso(3, "Emulsionar", "Incorpora el aceite en hilo. Debe quedar casi untuoso."),
-      paso(4, "Reposir", "Enfría 1 hora mínimo.", { tiempoSegundos: 3600 }),
+      paso(4, "Enfriar", "Enfría 1 hora mínimo.", { tiempoSegundos: 3600 }),
       paso(5, "Servir", "Sirve en plato llano con atún desmigado y huevo picado."),
     ],
     informacionNutricional: { calorias: 350, proteinas: 14, grasas: 22, carbohidratos: 26 },
