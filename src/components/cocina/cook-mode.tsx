@@ -305,7 +305,7 @@ export function CookMode({ receta }: CookModeProps) {
               transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
               className="cook-stage__inner"
             >
-              {(!showTimer || timer.status === "idle") && (
+              {!showTimer && (
                 <StepScene
                   key={`scene-${paso.numero}`}
                   titulo={paso.titulo}
@@ -321,7 +321,6 @@ export function CookMode({ receta }: CookModeProps) {
                   timerAlert={timerAlert}
                   onStart={() => void startTimer()}
                   onClearAlert={() => setTimerAlert(false)}
-                  compact={timer.status === "idle"}
                 />
               )}
             </motion.div>
@@ -345,7 +344,7 @@ export function CookMode({ receta }: CookModeProps) {
                 </span>
                 {showTimer && (
                   <span className="cook-step__time-chip">
-                    <Timer className="size-3.5" aria-hidden />
+                    <Timer className="size-4" aria-hidden />
                     {formatMin(paso.tiempoSegundos!)}
                   </span>
                 )}
@@ -354,6 +353,25 @@ export function CookMode({ receta }: CookModeProps) {
               <h1 className="cook-step__title">{paso.titulo}</h1>
               {!descIsRedundant && (
                 <p className="cook-step__desc">{paso.descripcion}</p>
+              )}
+
+              {showTimer && timer.status === "idle" && (
+                <button
+                  type="button"
+                  className="cook-timer-cta"
+                  onClick={() => void startTimer()}
+                >
+                  <span className="cook-timer-cta__icon" aria-hidden>
+                    <Timer className="size-5" />
+                  </span>
+                  <span className="cook-timer-cta__copy">
+                    <span className="cook-timer-cta__label">Iniciar temporizador</span>
+                    <span className="cook-timer-cta__time tabular-nums">
+                      {formatMin(paso.tiempoSegundos!)}
+                    </span>
+                  </span>
+                  <Play className="cook-timer-cta__play size-5" aria-hidden />
+                </button>
               )}
 
               {checklist.length > 0 && (
@@ -517,19 +535,17 @@ function CookTimerPanel({
   timerAlert,
   onStart,
   onClearAlert,
-  compact = false,
 }: {
   pasoSeconds: number;
   timer: ReturnType<typeof useCookTimer>;
   timerAlert: boolean;
   onStart: () => void;
   onClearAlert: () => void;
-  compact?: boolean;
 }) {
   const timerActive = timer.status === "running" || timer.status === "paused";
 
   return (
-    <div className={`cook-timer-panel ${compact ? "cook-timer-panel--compact" : ""}`}>
+    <div className="cook-timer-panel">
       {timerAlert && (
         <div className="cook-timer-alert" role="alert">
           ¡Tiempo terminado! Revisa el fuego y sigue al siguiente paso.
@@ -541,26 +557,31 @@ function CookTimerPanel({
           remaining={timer.status === "done" ? 0 : timer.remaining}
           total={timer.total || pasoSeconds}
           done={timer.status === "done"}
-          size={compact ? 168 : 220}
+          size={220}
         />
       )}
 
       {timer.status === "idle" && (
         <div className="cook-timer-idle">
+          <div className="cook-timer-idle__ring" aria-hidden>
+            <Timer className="cook-timer-idle__glyph size-8" />
+          </div>
           <p className="cook-timer-idle__value tabular-nums">
             {formatMin(pasoSeconds)}
           </p>
-          <p className="cook-timer-idle__label">Temporizador</p>
+          <p className="cook-timer-idle__label">Temporizador de este paso</p>
+          <button
+            type="button"
+            onClick={onStart}
+            className="cook-timer-idle__start"
+          >
+            <Play className="size-5" fill="currentColor" aria-hidden />
+            Iniciar temporizador
+          </button>
         </div>
       )}
 
       <div className="cook-timer-actions">
-        {timer.status === "idle" && (
-          <button type="button" onClick={onStart} className="cook-nav__btn cook-nav__btn--primary">
-            <Play className="size-5" />
-            Iniciar
-          </button>
-        )}
         {timer.status === "running" && (
           <button
             type="button"
