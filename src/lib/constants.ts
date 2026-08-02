@@ -5,9 +5,12 @@ export const SITE = {
   domain: "recetasandaluzas.com",
   url: "https://recetasandaluzas.com",
   description:
-    "Recetas tradicionales de cocina andaluza paso a paso: gazpacho, salmorejo, tapas, guisos y postres con temporizador, lista de la compra y modo cocina.",
+    "Recetas andaluzas fáciles paso a paso: gazpacho, salmorejo, tapas, guisos y postres tradicionales. Modo cocina con temporizador y lista de la compra.",
   locale: "es_ES",
   twitter: "@recetasandaluzas",
+  /** Título principal para Google (~55–60 caracteres). */
+  titleDefault:
+    "Recetas Andaluzas | Gazpacho, salmorejo y cocina andaluza",
 } as const;
 
 export const PROVINCIAS: { slug: string; nombre: Provincia }[] = [

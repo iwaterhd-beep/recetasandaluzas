@@ -29,7 +29,7 @@ const dmSans = DM_Sans({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: `${SITE.name} — Cocina tradicional de Andalucía`,
+    default: SITE.titleDefault,
     template: `%s | ${SITE.name}`,
   },
   description: SITE.description,
@@ -39,35 +39,47 @@ export const metadata: Metadata = {
   keywords: [
     "recetas andaluzas",
     "cocina andaluza",
-    "gazpacho",
-    "salmorejo",
-    "tapas",
+    "recetas fáciles andalucía",
+    "gazpacho andaluz",
+    "salmorejo cordobés",
+    "tapas andaluzas",
+    "guisos andaluces",
     "recetas españolas",
+    "modo cocina",
   ],
   alternates: {
     canonical: SITE.url,
+  },
+  icons: {
+    icon: [
+      { url: "/icon.png", type: "image/png", sizes: "256x256" },
+      { url: "/icons/icon-192.png", type: "image/png", sizes: "192x192" },
+      { url: "/icons/icon.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/apple-icon.png", sizes: "180x180", type: "image/png" }],
+    shortcut: ["/icon.png"],
   },
   openGraph: {
     type: "website",
     locale: SITE.locale,
     url: SITE.url,
     siteName: SITE.name,
-    title: SITE.name,
+    title: SITE.titleDefault,
     description: SITE.description,
     images: [
       {
-        url: "/images/placeholder-receta.svg",
-        width: 1200,
-        height: 800,
+        url: "/icons/icon-512.png",
+        width: 512,
+        height: 512,
         alt: SITE.name,
       },
     ],
   },
   twitter: {
-    card: "summary_large_image",
-    title: SITE.name,
+    card: "summary",
+    title: SITE.titleDefault,
     description: SITE.description,
-    images: ["/images/placeholder-receta.svg"],
+    images: ["/icons/icon-512.png"],
   },
   robots: {
     index: true,

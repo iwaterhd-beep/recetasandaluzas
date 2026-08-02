@@ -82,19 +82,20 @@ function pickMasIdeas(
 
 export const metadata: Metadata = {
   ...buildPageMetadata({
-    title: `${SITE.name} — Cocina tradicional de Andalucía`,
+    title: SITE.titleDefault,
     description: SITE.description,
     path: "/",
     keywords: [
       "recetas andaluzas",
       "cocina andaluza",
-      "gazpacho",
-      "salmorejo",
-      "tapas",
+      "gazpacho andaluz",
+      "salmorejo cordobés",
+      "tapas andaluzas",
+      "recetas fáciles andalucía",
     ],
   }),
   title: {
-    absolute: `${SITE.name} — Cocina tradicional de Andalucía`,
+    absolute: SITE.titleDefault,
   },
 };
 
