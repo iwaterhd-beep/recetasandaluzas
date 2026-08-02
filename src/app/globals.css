@@ -353,6 +353,145 @@
     color: var(--foreground);
   }
 
+  .account-menu {
+    position: relative;
+  }
+
+  .account-menu__trigger.is-open {
+    background: var(--surface-muted);
+    color: var(--foreground);
+  }
+
+  .account-menu__panel {
+    position: absolute;
+    top: calc(100% + 0.45rem);
+    right: 0;
+    z-index: 80;
+    width: min(18.5rem, calc(100vw - 1.5rem));
+    padding: 0.45rem;
+    border-radius: calc(var(--radius-lg) + 2px);
+    background: var(--surface);
+    box-shadow: var(--shadow-lift);
+    border: 1px solid var(--border);
+    animation: account-menu-in 160ms ease-out;
+  }
+
+  @keyframes account-menu-in {
+    from {
+      opacity: 0;
+      transform: translateY(-6px) scale(0.98);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+
+  .account-menu__head {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.65rem 0.7rem 0.75rem;
+  }
+
+  .account-menu__avatar {
+    display: grid;
+    place-items: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--olivo) 16%, var(--surface-muted));
+    color: var(--olivo);
+    font-size: 0.9rem;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+
+  .account-menu__name {
+    margin: 0;
+    font-size: 0.92rem;
+    font-weight: 750;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--foreground);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .account-menu__email {
+    margin: 0.1rem 0 0;
+    font-size: 0.72rem;
+    color: var(--muted-foreground);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .account-menu__list,
+  .account-menu__footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+
+  .account-menu__list {
+    padding: 0.15rem 0 0.35rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .account-menu__footer {
+    padding-top: 0.25rem;
+    border-top: 1px solid var(--border);
+  }
+
+  .account-menu__item {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    width: 100%;
+    min-height: 2.55rem;
+    padding: 0.45rem 0.7rem;
+    border: none;
+    border-radius: calc(var(--radius-lg) - 4px);
+    background: transparent;
+    color: var(--foreground);
+    font-size: 0.88rem;
+    font-weight: 650;
+    font-weight: 600;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+    transition: background 140ms ease;
+  }
+
+  .account-menu__item:hover,
+  .account-menu__item:focus-visible {
+    background: var(--surface-muted);
+    outline: none;
+  }
+
+  .account-menu__item svg {
+    color: var(--muted-foreground);
+    flex-shrink: 0;
+  }
+
+  .account-menu__item--accent {
+    color: var(--olivo);
+  }
+
+  .account-menu__item--accent svg {
+    color: var(--olivo);
+  }
+
+  .account-menu__item--danger {
+    color: var(--tomate);
+  }
+
+  .account-menu__item--danger svg {
+    color: var(--tomate);
+  }
+
   .app-header__search-sheet {
     margin: 0 0.85rem 0.75rem;
     width: auto;
