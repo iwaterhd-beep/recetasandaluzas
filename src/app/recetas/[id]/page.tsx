@@ -111,7 +111,7 @@ export default async function RecetaPage({ params }: Props) {
             fill
             className="object-cover"
             priority
-            sizes="100vw"
+            sizes="(min-width: 768px) 900px, 100vw"
           />
         </div>
       </div>

@@ -26,7 +26,7 @@ const FORCE_ALL = FORCE.has("all");
 
 /** Archivo Commons exacto (prioridad sobre búsqueda). */
 const CURATED = {
-  torrijas: "File:Torrija.jpg",
+  torrijas: "File:Torrija con azúcar.jpg",
   "huevos-a-la-flamenca": "File:Shakshuka by Calliopejen1.jpg",
   "puchero-andaluz": "File:Cocido madrileño.jpg",
   "tortilla-del-sacromonte": "File:Tortilla española.jpg",
@@ -95,11 +95,48 @@ const CURATED = {
   "queso-payoyo-frito": "File:Queso frito.jpg",
   "gazpacho-de-sandia": "File:Gazpacho - Aperitivo.jpg",
   "salmorejo-de-remolacha": "File:Salmorejo.jpg",
+  // —— ampliación (faltantes) ——
+  "polea-andaluza": "File:Natillas con galleta y canela.jpg",
+  "gachas-andaluzas": "File:Gachas Manchegas.jpg",
+  "sopa-de-picadillo": "File:Caldo de pollo con cebolla y ajo.jpg",
+  "menestra-andaluza": "File:Menestra de verduras.jpg",
+  "rinones-al-jerez": "File:Riñones al jerez.jpg",
+  "caldereta-de-cordero": "File:Caldereta de cordero.jpg",
+  "cazuela-de-fideos": "File:Fideuà.JPG",
+  "bunuelos-de-bacalao": "File:Buñuelos de bacalao.jpg",
+  "tortas-de-alcala": "File:Tortas de Aceite.JPG",
+  "sopa-de-ajo-andaluza": "File:Sopa de ajo.jpg",
+  "habichuelas-verdes-con-jamon": "File:Judías verdes con jamón.jpg",
+  "perdices-en-escabeche": "File:Perdiz escabechada.jpg",
+  "gazpacho-de-cerezas": "File:Gazpacho - Aperitivo.jpg",
+  "chorizo-al-vino-dulce": "File:Chorizo a la sidra.jpg",
+  "sardinas-en-escabeche": "File:Sardinas en escabeche.jpg",
+  "pollo-con-tomate-andaluz": "File:Pollo al chilindrón.jpg",
+  "pimientos-rellenos-andaluces": "File:Pimientos rellenos.jpg",
+  "albondigas-en-salsa-andaluza": "File:Albóndigas en salsa.jpg",
+  "sopa-de-pescado-malaguena": "File:Sopa de pescado.jpg",
+  "cola-de-rape-con-patatas": "File:Rape a la gallega.jpg",
+  "magras-con-tomate": "File:Magras con tomate.jpg",
+  "revuelto-de-esparragos-trigueros":
+    "File:Revuelto de huevos y ajos tiernos, gastronomía de España.jpg",
+  "arroz-con-bogavante-andaluz": "File:Arroz con bogavante.jpg",
+  "flan-de-huevo-casero": "File:Flan de huevo.jpg",
+  "empanadillas-de-atun": "File:Empanadillas de atún.jpg",
+  "sopa-de-melon": "File:Sopa de melón.jpg",
+  "guiso-de-cardos": "File:Menestra de verduras salteadas.jpg",
+  "rabanos-con-aceite": "File:Radish salad (8655038021).jpg",
+  "caballa-en-adobo": "File:Plato de caballas fritas (España).jpg",
+  "lentejas-con-arroz": "File:Guiso de lentejas con arroz.jpg",
+  "pan-cateto-con-aceite": "File:Pan tumaca.jpg",
+  "pringa-sevilla": "File:Pringá.jpg",
+  "pez-de-limon-a-la-plancha": "File:Rodaballo a la plancha.jpg",
+  "cocido-garbanzos-jaen": "File:Cocido de garbanzos con verdura.jpg",
+  "huevos-rotos-con-jamon": "File:Huevos rotos con jamón.jpg",
 };
 
 /** Rechazar títulos que suelen ser paisaje / no-comida */
 const BAD_TITLE =
-  /embalse|hotel|lamborghini|chart|map|panoram|diagram|logo|coat of arms|tower|iglesia|church|rooftop|pueblo|village|street|pride|race|calle |building|elevation|scomber|apis mellifera|brassica|plant|leaf|flower|landscape|skyline|antenna|wikipedia|acapulco|bahia de|bay of|rooftop|plaza de|cathedral|castillo|castle|museum|statue|sculpture|painting|rubens|tiepolo/i;
+  /embalse|hotel|lamborghini|chart|map|panoram|diagram|logo|coat of arms|tower|iglesia|church|rooftop|pueblo|village|street|pride|race|calle |building|elevation|scomber|apis mellifera|brassica|plant|leaf|flower|landscape|skyline|antenna|wikipedia|acapulco|bahia de|bay of|plaza de|cathedral|castillo|castle|museum|statue|sculpture|painting|rubens|tiepolo|geograph|underwater|swimming|seriola|madeira|vall de|cardós|badaín|polea irués|pulley|smoker|getting ready|fábrica|factory|packaged|mountain|montaña|pescaderías|raw fish|basin|talbinah|kadayos|bacolod|chicken house|egusi|nigeria/i;
 
 /** id → términos de búsqueda en Commons */
 const QUERIES = {
@@ -206,6 +243,49 @@ const QUERIES = {
   "borrachuelos-malaguenos": ["Borrachuelos", "Fried pastry honey"],
   "leche-frita-andaluza": ["Leche frita"],
   "mostachones-de-utrerra": ["Mostachones", "Spanish cookies"],
+
+  // —— ampliación (35 nuevas) ——
+  "polea-andaluza": ["Poleá", "Gachas dulces", "Harina leche canela"],
+  "gachas-andaluzas": ["Gachas dulces", "Gachas andaluzas", "Gachas harina"],
+  "sopa-de-picadillo": ["Sopa de picadillo", "Chicken soup Spanish", "Sopa gallina"],
+  "menestra-andaluza": ["Menestra de verduras", "Vegetable stew Spanish"],
+  "rinones-al-jerez": ["Riñones al jerez", "Kidneys sherry", "Riñones salsa"],
+  "caldereta-de-cordero": ["Caldereta de cordero", "Lamb stew Spanish"],
+  "cazuela-de-fideos": ["Cazuela de fideos", "Fideos malagueños", "Fideuà"],
+  "bunuelos-de-bacalao": ["Buñuelos de bacalao", "Cod fritters"],
+  "tortas-de-alcala": ["Tortas de Alcalá", "Torta de aceite", "Olive oil biscuit"],
+  "sopa-de-ajo-andaluza": ["Sopa de ajo", "Garlic soup Spanish", "Castilian garlic soup"],
+  "habichuelas-verdes-con-jamon": [
+    "Judías verdes con jamón",
+    "Green beans ham Spanish",
+  ],
+  "perdices-en-escabeche": ["Perdiz escabechada", "Partridge escabeche"],
+  "gazpacho-de-cerezas": ["Gazpacho cerezas", "Cherry gazpacho", "Gazpacho"],
+  "chorizo-al-vino-dulce": ["Chorizo al vino", "Chorizo a la sidra", "Chorizo stew"],
+  "sardinas-en-escabeche": ["Sardinas en escabeche", "Pickled sardines"],
+  "pollo-con-tomate-andaluz": ["Pollo con tomate", "Chicken tomato stew Spanish"],
+  "pimientos-rellenos-andaluces": ["Pimientos rellenos", "Stuffed peppers Spanish"],
+  "albondigas-en-salsa-andaluza": ["Albóndigas en salsa", "Spanish meatballs"],
+  "sopa-de-pescado-malaguena": ["Sopa de pescado", "Fish soup Spanish", "Gazpachuelo"],
+  "cola-de-rape-con-patatas": ["Rape con patatas", "Monkfish potatoes", "Rape a la gallega"],
+  "magras-con-tomate": ["Magras con tomate", "Pork loin tomato"],
+  "revuelto-de-esparragos-trigueros": [
+    "Revuelto de espárragos",
+    "Asparagus scrambled eggs",
+  ],
+  "arroz-con-bogavante-andaluz": ["Arroz con bogavante", "Lobster rice", "Arroz marisco"],
+  "flan-de-huevo-casero": ["Flan de huevo", "Spanish flan", "Crème caramel"],
+  "empanadillas-de-atun": ["Empanadillas de atún", "Tuna empanadillas"],
+  "sopa-de-melon": ["Sopa de melón", "Melon soup cold", "Gazpacho melon"],
+  "guiso-de-cardos": ["Cardos", "Cardoon stew", "Cardos con almendras"],
+  "rabanos-con-aceite": ["Rábanos", "Radish salad oil", "Rabanos aceite"],
+  "caballa-en-adobo": ["Caballa en adobo", "Mackerel marinade", "Caballa asada"],
+  "lentejas-con-arroz": ["Lentejas con arroz", "Lentils rice stew"],
+  "pan-cateto-con-aceite": ["Pan tumaca", "Pan con tomate", "Pan cateto"],
+  "pringa-sevilla": ["Pringá", "Pringa", "Cocido meat sandwich"],
+  "pez-de-limon-a-la-plancha": ["Pez limón", "Yellowtail grill", "Fish plancha"],
+  "cocido-garbanzos-jaen": ["Cocido de garbanzos", "Chickpea stew Spanish"],
+  "huevos-rotos-con-jamon": ["Huevos rotos con jamón", "Broken eggs ham"],
 };
 
 async function commonsSearch(query) {

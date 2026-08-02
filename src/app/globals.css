@@ -1320,32 +1320,34 @@
   .recipe-hero-app {
     position: relative;
     width: 100%;
-    aspect-ratio: 1 / 1;
+    aspect-ratio: 16 / 10;
+    max-height: min(36vh, 240px);
     background: var(--surface-muted);
     overflow: hidden;
   }
 
   @media (min-width: 768px) {
     .recipe-hero-app {
-      aspect-ratio: 16 / 10;
+      aspect-ratio: 21 / 9;
+      max-height: min(38vh, 320px);
       border-radius: var(--radius-xl);
     }
   }
 
   .recipe-sheet {
     position: relative;
-    margin-top: -1.75rem;
+    margin-top: -1.25rem;
     border-radius: var(--radius-xl) var(--radius-xl) 0 0;
     background: var(--surface);
     box-shadow: 0 -4px 24px rgb(30 36 25 / 0.08);
-    padding: 1.5rem 0 2rem;
+    padding: 1.25rem 0 2rem;
   }
 
   @media (min-width: 768px) {
     .recipe-sheet {
-      margin-top: -2.5rem;
+      margin-top: -1.75rem;
       border-radius: var(--radius-xl);
-      padding: 2rem;
+      padding: 1.75rem 2rem 2rem;
       box-shadow: var(--shadow-lift);
     }
   }
